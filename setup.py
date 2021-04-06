@@ -21,6 +21,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
     ],
-    packages=["pochas_geoutils"],
+    packages=["geoutils"],
     install_requires=["numpy","geopandas","shapely","pandas"],
 )
