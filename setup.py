@@ -7,7 +7,7 @@ def readme():
 
 
 setup(
-    name="senhub_batchapi",
+    name="pochas-geoutils",
     version="0.1.0",
     description="A Python package includes geo-utils for POCHAS project",
     long_description=readme(),
