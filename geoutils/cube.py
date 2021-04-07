@@ -41,7 +41,6 @@ class cube:
 # Func 03
 def to_tif(file,path, crs=4326, cell_size=None):
     file = file.squeeze()
-    file = file.rio.write_crs(crs)
 
     if cell_size!=None:
         if crs==4326:
