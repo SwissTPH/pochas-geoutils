@@ -27,9 +27,15 @@ class cube:
         return concat_img
 
     # Func 02
-    def generate_mosaic(self,resample_time):
+    def generate_mosaic(self,resample_time=None):
+
+        if resample_time==None:
+            raise RuntimeError(f"Resample frequency should be determined")
+
         cub = cube(self.rast_list, self.start_date, self.end_date, self.freq).generate_cube()
+        crs = int(cub.attrs['crs'][-4:])
         agg_img = cub.resample(time=resample_time).median()
+        agg_img = agg_img.rio.write_crs(crs)
         return agg_img
 
 # Func 03
