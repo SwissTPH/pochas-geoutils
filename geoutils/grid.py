@@ -81,7 +81,7 @@ class grid:
 
 
 # Func 03
-def generate_BID(gdf, coords=None, x=None, y=None, circularity=False):
+def generate_BID(gdf, coords=None, cell=None, x=None, y=None, circularity=False):
     """
     The function generate ID for each cells in the grid
     :param gdf: Geopandas Data Frame
@@ -96,7 +96,7 @@ def generate_BID(gdf, coords=None, x=None, y=None, circularity=False):
     if coords != None:
         gdf1['X'] = gdf1[coords].centroid.x
         gdf1['Y'] = gdf1[coords].centroid.y
-        gdf1['BID'] = (np.floor(gdf1['Y'] / 1000) * 100000 + np.floor(gdf1['X'] / 1000)).convert_dtypes()
+        gdf1['BID'] = (np.floor(gdf1['Y'] / cell) * 100000 + np.floor(gdf1['X'] / cell)).convert_dtypes()
 
         if circularity == True:
             gdf1['area'] = gdf1[coords].area
@@ -108,6 +108,8 @@ def generate_BID(gdf, coords=None, x=None, y=None, circularity=False):
 
         if circularity == True:
             raise RuntimeError(f"it is not polygon")
+    elif cell == None:
+        raise RuntimeError(f"Determine the cell size")
     else:
         raise RuntimeError(f"Determine the coordinate column")
 
