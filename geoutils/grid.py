@@ -94,9 +94,12 @@ def generate_BID(gdf, coords=None, cell=None, x=None, y=None, circularity=False)
     """
     gdf1 = gdf.copy()
     if coords != None:
-        gdf1['X'] = gdf1[coords].centroid.x
-        gdf1['Y'] = gdf1[coords].centroid.y
-        gdf1['BID'] = (np.floor(gdf1['Y'] / cell) * 100000 + np.floor(gdf1['X'] / cell)).convert_dtypes()
+        if cell == None:
+            raise RuntimeError(f"Determine the cell size")
+        else:
+            gdf1['X'] = gdf1[coords].centroid.x
+            gdf1['Y'] = gdf1[coords].centroid.y
+            gdf1['BID'] = (np.floor(gdf1['Y'] / cell) * 100000 + np.floor(gdf1['X'] / cell)).convert_dtypes()
 
         if circularity == True:
             gdf1['area'] = gdf1[coords].area
@@ -108,8 +111,6 @@ def generate_BID(gdf, coords=None, cell=None, x=None, y=None, circularity=False)
 
         if circularity == True:
             raise RuntimeError(f"it is not polygon")
-    elif cell == None:
-        raise RuntimeError(f"Determine the cell size")
     else:
         raise RuntimeError(f"Determine the coordinate column")
 
