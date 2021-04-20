@@ -20,7 +20,7 @@ def extract_geotif_to_point(rast_path,gdf_path,resample_size,date='2000',stats='
     rowcol = np.asarray(rowcol_tuple).T
 
     pixel_size = img.transform[0]
-    size = np.floor((resample_size/pixel_size)/2)
+    size = int(np.floor((resample_size/pixel_size)/2))
 
 # Define the help function to be used in the main function
     def extract_point(b,rc):
