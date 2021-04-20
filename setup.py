@@ -8,8 +8,8 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.3.1",
-    description="A Python package includes geo-utils for POCHAS project",
+    version="0.3.3",
+    description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/behzad89/pochas-geoutils",
