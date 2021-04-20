@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.3.4",
+    version="0.3.5",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -22,5 +22,5 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=["geoutils"],
-    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray"],
+    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio"],
 )

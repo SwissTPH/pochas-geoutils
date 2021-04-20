@@ -1,7 +1,7 @@
 # Name: cube.py
 # Description: The tools to generate a cube from rasters
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
-# Date: 07.14.2021
+# Date: 07.04.2021
 
 
 import xarray as xr

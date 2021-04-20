@@ -1,10 +1,14 @@
+# Name: dataExtraction.py
+# Description: The tools to extract data from rasters
+# Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
+# Date: 20.04.2021
+
 import numpy as np
 import numpy.ma as ma
-import pandas as pd
 import geopandas as gpd
 import rasterio as rs
 
-
+# Func 01
 def extract_geotif_to_point(rast_path,gdf_path,resample_size,date='2000',stats='mean',mask=False):
     """
     rast_path: (str, file object or pathlib.Path object)
@@ -57,3 +61,8 @@ def extract_geotif_to_point(rast_path,gdf_path,resample_size,date='2000',stats='
             raise NameError(f"Mean only supported")
 
     return gdf
+
+
+# Func 02
+def extract_netcdf_to_point():
+    pass
