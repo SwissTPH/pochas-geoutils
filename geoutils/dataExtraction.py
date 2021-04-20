@@ -32,8 +32,8 @@ def extract_geotif_to_point(rast_path,gdf_path,resample_size,date='2000',stats='
         return extracted_values
 
     def extract_point_buffer_mask(b,rc,s):
-        extracted_values = [np.nanmean(ma.masked_values(
-            b[coord[0]-s:coord[0]+(s+1), coord[1]-s:coord[1]+(s+1)], 0).filled(np.nan))
+        extracted_values = [np.nanmean(ma.masked_values(\
+            b[coord[0]-s:coord[0]+(s+1), coord[1]-s:coord[1]+(s+1)], 0).filled(np.nan)) \
                             for coord in rc]
         return extracted_values
 
