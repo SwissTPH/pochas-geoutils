@@ -9,7 +9,7 @@ import geopandas as gpd
 import rasterio as rs
 
 # Func 01
-def extract_geotif_to_point(rast_path,gdf_path,resample_size,date='2000',stats='mean',mask=False):
+def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',mask=False):
     """
     rast_path: (str, file object or pathlib.Path object)
     gdf_path: (str, file object or pathlib.Path object)
