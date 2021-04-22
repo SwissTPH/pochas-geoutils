@@ -92,20 +92,16 @@ def main():
     UTMxMin,UTMyMin = Projection(xmin,ymin)
     UTMxMax, UTMyMax = Projection(xmax, ymax)
 
-    area = (UTMxMax - UTMxMin) * (UTMyMax - UTMyMin)
+    length = (UTMxMax - UTMxMin)
+    width = (UTMyMax - UTMyMin)
+    cell_size = max(np.floor(length),np.floor(width))
 
-    if area < 50000:
-        cell_size = area
-    elif area > 50000 and area < 100000:
-        cell_size = 50000
-    else:
-        cell_size = 100000
 
     point_list_UTM = gr.grid(UTMxMin, UTMxMax, UTMyMin, UTMyMax, cell_size=cell_size, crs=EPSG).generate_point(center=True)
     point_list_WGS = np.asarray(Projection(point_list_UTM.X.values, point_list_UTM.Y.values, inverse=True)).T
 
     sd = dt.datetime.strptime(startDate, "%Y-%m-%d").date()
-    ed = dt.datetime.strptime('endDate', "%Y-%m-%d").date()
+    ed = dt.datetime.strptime(endDate, "%Y-%m-%d").date()
     ab, lr = 100, 100
 
 
