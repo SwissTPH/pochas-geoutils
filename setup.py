@@ -23,4 +23,9 @@ setup(
     ],
     packages=["geoutils"],
     install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio","netcdf4"],
+    entry_points={
+            "console_scripts": [
+                "senhub_batchapi=senhub_batchapi.BatchapiTilesDownload:main",
+            ]
+        },
 )

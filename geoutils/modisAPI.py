@@ -2,6 +2,7 @@
 # Description: The tools to download the Modis data in NetCDF format
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
 # Date: 22.04.2021
+# https://github.com/ornldaac/modis-viirs-rest-api-python
 
 # For requests
 import requests, json, os
