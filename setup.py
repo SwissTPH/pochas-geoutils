@@ -22,5 +22,5 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=["geoutils"],
-    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio"],
+    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio","netcdf4"],
 )

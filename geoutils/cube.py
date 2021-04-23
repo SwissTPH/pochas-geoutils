@@ -53,3 +53,4 @@ def to_tif(file,path, crs=4326, cell_size=None):
     file.rio.to_raster(path, dtype="uint16")
     print('the file was saved!')
 
+#TODO: Generate a function to meege images

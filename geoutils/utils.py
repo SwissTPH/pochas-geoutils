@@ -26,3 +26,19 @@ def geometry_from_geojson(filepath):
 
 
 
+
+"""yield successive n-sized chunks from list l"""
+def chunk(l, n):
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+"""assemble request URL string"""
+def getSubsetURL( url, prod , lat , lon , band, sd , ed , ab , lr ): return( "".join([
+    url, prod, "/subset?",
+    "latitude=", str(lat),
+    "&longitude=", str(lon),
+    "&band=", str(band),
+    "&startDate=", str(sd),
+    "&endDate=", str(ed),
+    "&kmAboveBelow=", str(ab),
+    "&kmLeftRight=", str(lr) ]) )
