@@ -1,4 +1,4 @@
-import json
+import json,os
 
 def geometry_from_geojson(filepath):
     with open(filepath, 'r') as f:
@@ -42,3 +42,26 @@ def getSubsetURL( url, prod , lat , lon , band, sd , ed , ab , lr ): return( "".
     "&endDate=", str(ed),
     "&kmAboveBelow=", str(ab),
     "&kmLeftRight=", str(lr) ]) )
+
+
+def list_files_with_absolute_paths(dirpath,endswith=None):
+    if endswith is None:
+        files = []
+        for dirname, dirnames, filenames in os.walk(dirpath):
+            files += [os.path.join(dirname, filename) for filename in filenames]
+    else:
+        files = []
+        for dirname, dirnames, filenames in os.walk(dirpath):
+            files += [os.path.join(dirname, filename) for filename in filenames if filename.endswith(endswith)]
+    return files
+
+def list_files(dirpath,endswith=None):
+    if endswith is not None:
+        files = []
+        for dirname, dirnames, filenames in os.walk(dirpath):
+            files += [filename for filename in filenames if filename.endswith(endswith)]
+    else:
+        files = []
+        for dirname, dirnames, filenames in os.walk(dirpath):
+            files += [filename for filename in filenames]
+    return files
