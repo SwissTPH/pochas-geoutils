@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.4.1",
+    version="0.4.2",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -25,7 +25,7 @@ setup(
     install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio","netcdf4"],
     entry_points={
             "console_scripts": [
-                "senhub_batchapi=senhub_batchapi.BatchapiTilesDownload:main",
+                "modisAPI=geoutils.modisAPI:main",
             ]
         },
 )

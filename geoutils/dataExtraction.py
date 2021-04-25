@@ -62,7 +62,7 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
 
     return gdf
 
-
-# Func 02
+#TODO: Complete this function
+# Func 02: extract_netcdf_to_point():
 def extract_netcdf_to_point():
     pass

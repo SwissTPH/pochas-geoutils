@@ -3,6 +3,7 @@
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
 # Date: 22.04.2021
 # https://github.com/ornldaac/modis-viirs-rest-api-python
+# https://modis.ornl.gov/data/modis_webservice.html
 
 # For requests
 import requests, json, os,time
