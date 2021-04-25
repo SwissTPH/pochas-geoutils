@@ -132,7 +132,7 @@ def main():
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
                     _url = ut.getSubsetURL(url,product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                     _response = requests.get(_url, headers=header)
-                    time.sleep(5)
+                    time.sleep(60)
                     subsets.append(json.loads(_response.text))
                 ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
