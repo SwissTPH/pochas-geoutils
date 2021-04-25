@@ -6,7 +6,7 @@
 # https://modis.ornl.gov/data/modis_webservice.html
 
 # For requests
-import requests, json, os,time
+import requests, json, os, time
 import numpy as np
 from . import grid as gr
 from . import utils as ut
@@ -18,9 +18,6 @@ import rioxarray
 # Utilities
 import argparse
 import sys
-
-
-
 
 
 def main():
@@ -39,7 +36,9 @@ def main():
     parser.add_argument("--crs_aoi", help="CRS for AOI geojson. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_crs", help="CRS for output. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_cellsize", help="out put image cellsize. Default: 250 ", type=int, default=250)
-    parser.add_argument("--number_chunks", help="There is a limit of a maximum ten modis dates per reques. Default: 5 ", type=int, default=5)
+    parser.add_argument("--number_chunks", help="There is a limit of a maximum ten modis dates per reques. Default: 5 ",
+                        type=int, default=5)
+
     args = parser.parse_args()
     satellite = args.satellite
     product = args.product
@@ -56,7 +55,7 @@ def main():
         content = resp.json()
         time.sleep(5)
         for each in content['products']:
-           print('%s: %s ' % (each['product'], each['description']))
+            print('%s: %s ' % (each['product'], each['description']))
 
     #  retrieve available band names for a product
     if args.product:
@@ -67,7 +66,7 @@ def main():
             for each in content['bands']:
                 print('%s: %s ' % (each['band'], each['description']))
         else:
-             # Get a list of data for product and band:
+            # Get a list of data for product and band:
 
             path_area_of_interest = args.path_aoi
             if path_area_of_interest is None:
@@ -90,6 +89,8 @@ def main():
             ouput_crs = args.ouput_crs
             ouput_cellsize = args.ouput_cellsize
             number_chunks = args.number_chunks
+            if number_chunks > 10 or number_chunks < 1:
+                raise RuntimeError(f"Number should be between 1 and 10")
 
             region_geometry = ut.geometry_from_geojson(path_area_of_interest)
             xmin = region_geometry['coordinates'][0][0][0]
@@ -113,25 +114,27 @@ def main():
 
             length = (UTMxMax - UTMxMin)
             width = (UTMyMax - UTMyMin)
-            area = (length * width)/1000000
+            area = (length * width) / 1000000
             print(f'Area is equal to: {area} m2')
             if area < 50:
                 print(f'The number of the tiles are: 1')
                 point_long = UTMxMin + length / 2
-                point_lat = UTMyMin + width/2
-                coords=np.asarray(Projection(point_long, point_lat, inverse=True)).T
+                point_lat = UTMyMin + width / 2
+                coords = np.asarray(Projection(point_long, point_lat, inverse=True)).T
                 datesurl = [url + f'{product}/dates?latitude={coords[1]}&longitude={coords[0]}']
 
                 responses = [requests.get(date, headers=header) for date in datesurl]
                 time.sleep(2)
                 dates = [json.loads(resp.text)['dates'] for resp in responses]
-                modis_dates = [d['modis_date'] for date in dates for d in date if all([dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd, dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])]
+                modis_dates = [d['modis_date'] for date in dates for d in date if all(
+                    [dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd,
+                     dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])]
 
                 chunks = list(ut.chunk(modis_dates, number_chunks))
                 subsets = []
                 for i, c in enumerate(chunks):
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
-                    _url = ut.getSubsetURL(url,product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
+                    _url = ut.getSubsetURL(url, product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                     _response = requests.get(_url, headers=header)
                     time.sleep(10)
                     subsets.append(json.loads(_response.text))
@@ -140,16 +143,18 @@ def main():
             else:
                 grid_UTM = gr.grid(UTMxMin, UTMxMax, UTMyMin, UTMyMax, cell_size=100000, crs=EPSG).generate_grid()
                 point_list_UTM = grid_UTM.centroid
-                point_list_WGS = np.asarray(Projection(point_list_UTM.x.values, point_list_UTM.y.values, inverse=True)).T
+                point_list_WGS = np.asarray(
+                    Projection(point_list_UTM.x.values, point_list_UTM.y.values, inverse=True)).T
                 print(f'The number of the tiles are: {len(point_list_WGS)}')
-                datesurl = [url + f'{product}/dates?latitude={coord[0]}&longitude={coord[1]}' for coord in point_list_WGS]
-
+                datesurl = [url + f'{product}/dates?latitude={coord[0]}&longitude={coord[1]}' for coord in
+                            point_list_WGS]
 
                 responses = [requests.get(date, headers=header) for date in datesurl]
                 dates = [json.loads(resp.text)['dates'] for resp in responses]
                 modis_dates = [
-                    [d['modis_date'] for d in date if all([dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd,
-                                                           dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])] for
+                    [d['modis_date'] for d in date if
+                     all([dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd,
+                          dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])] for
                     date in dates]
 
                 # divide modis_dates list into increments of 10
@@ -161,16 +166,13 @@ def main():
                     subsets = []
                     for i, c in enumerate(chunks):
                         print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
-                        _url = ut.getSubsetURL(url,product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
+                        _url = ut.getSubsetURL(url, product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                         _response = requests.get(_url, headers=header)
                         time.sleep(10)
-                        subsets.append(json.loads(_response.text))
-                    ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
+                        #subsets.append(json.loads(_response.text))
+                        subsets = json.loads(_response.text)
+                        ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
+
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
