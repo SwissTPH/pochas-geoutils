@@ -39,7 +39,7 @@ def main():
     parser.add_argument("--crs_aoi", help="CRS for AOI geojson. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_crs", help="CRS for output. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_cellsize", help="out put image cellsize. Default: 250 ", type=int, default=250)
-
+    parser.add_argument("--number_chunks", help="There is a limit of a maximum ten modis dates per reques. Default: 5 ", type=int, default=5)
     args = parser.parse_args()
     satellite = args.satellite
     product = args.product
@@ -89,6 +89,7 @@ def main():
 
             ouput_crs = args.ouput_crs
             ouput_cellsize = args.ouput_cellsize
+            number_chunks = args.number_chunks
 
             region_geometry = ut.geometry_from_geojson(path_area_of_interest)
             xmin = region_geometry['coordinates'][0][0][0]
@@ -126,7 +127,7 @@ def main():
                 dates = [json.loads(resp.text)['dates'] for resp in responses]
                 modis_dates = [d['modis_date'] for date in dates for d in date if all([dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd, dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])]
 
-                chunks = list(ut.chunk(modis_dates, 2))
+                chunks = list(ut.chunk(modis_dates, number_chunks))
                 subsets = []
                 for i, c in enumerate(chunks):
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
@@ -156,7 +157,7 @@ def main():
                 # Iterate over groups of dates, request subsets from the REST API, and append to a list of responses:
                 for d, coords in enumerate(point_list_WGS):
                     print(f'coordinate: {coords}')
-                    chunks = list(ut.chunk(modis_dates[d], 2))
+                    chunks = list(ut.chunk(modis_dates[d], number_chunks))
                     subsets = []
                     for i, c in enumerate(chunks):
                         print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
