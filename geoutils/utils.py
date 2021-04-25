@@ -52,7 +52,7 @@ def getSubsetURL( url, prod , lat , lon , band, sd , ed , ab , lr ): return( "".
 
 def convert_to_NetCDF(subsets,coords,ouput_crs,ouput_cellsize):
     # Use dictionary comprehension to get some spatial metadata from the first subset in our list:
-    meta = {key: value for key, value in subsets[0].items() if key != "subset"}
+    meta = {key: value for key, value in subsets.items() if key != "subset"}
     # Iterate over the list of subsets and collect the data in a dictionary:
     data = {'dates': [], 'arrays': []}
     for i in subsets:
