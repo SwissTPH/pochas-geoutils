@@ -8,8 +8,8 @@
 # For requests
 import requests, json, os,time
 import numpy as np
-from . import grid as gr
-from . import utils as ut
+import grid as gr
+import utils as ut
 from pyproj import Proj, CRS
 import datetime as dt
 import xarray as xr
@@ -38,7 +38,7 @@ def main():
     parser.add_argument("--path_aoi", help="Path for AOI geojson. ", type=str)
     parser.add_argument("--crs_aoi", help="CRS for AOI geojson. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_crs", help="CRS for output. Default: 4326 ", type=int, default=4326)
-    parser.add_argument("--ouput_cellsize", help="out put image cellsize. Default: 250 ", type=float, default=250)
+    parser.add_argument("--ouput_cellsize", help="out put image cellsize. Default: 250 ", type=int, default=250)
 
     args = parser.parse_args()
     satellite = args.satellite
@@ -132,7 +132,7 @@ def main():
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
                     _url = ut.getSubsetURL(url,product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                     _response = requests.get(_url, headers=header)
-                    time.sleep(10)
+                    time.sleep(5)
                     subsets.append(json.loads(_response.text))
                 ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
