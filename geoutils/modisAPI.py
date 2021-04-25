@@ -126,7 +126,7 @@ def main():
                 dates = [json.loads(resp.text)['dates'] for resp in responses]
                 modis_dates = [d['modis_date'] for date in dates for d in date if all([dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() >= sd, dt.datetime.strptime(d['calendar_date'], "%Y-%m-%d").date() < ed])]
 
-                chunks = list(ut.chunk(modis_dates, 5))
+                chunks = list(ut.chunk(modis_dates, 2))
                 subsets = []
                 for i, c in enumerate(chunks):
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
@@ -156,12 +156,13 @@ def main():
                 # Iterate over groups of dates, request subsets from the REST API, and append to a list of responses:
                 for d, coords in enumerate(point_list_WGS):
                     print(f'coordinate: {coords}')
-                    chunks = list(ut.chunk(modis_dates[d], 5))
+                    chunks = list(ut.chunk(modis_dates[d], 2))
                     subsets = []
                     for i, c in enumerate(chunks):
                         print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
                         _url = ut.getSubsetURL(url,product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                         _response = requests.get(_url, headers=header)
+                        time.sleep(10)
                         subsets.append(json.loads(_response.text))
                     ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
