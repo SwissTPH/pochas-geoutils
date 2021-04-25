@@ -169,9 +169,8 @@ def main():
                         _url = ut.getSubsetURL(url, product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
                         _response = requests.get(_url, headers=header)
                         time.sleep(10)
-                        #subsets.append(json.loads(_response.text))
-                        subsets = json.loads(_response.text)
-                        ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
+                        subsets.append(json.loads(_response.text))
+                    ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
 
 if __name__ == "__main__":
