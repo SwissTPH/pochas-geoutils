@@ -36,8 +36,8 @@ def main():
     parser.add_argument("--crs_aoi", help="CRS for AOI geojson. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_crs", help="CRS for output. Default: 4326 ", type=int, default=4326)
     parser.add_argument("--ouput_cellsize", help="out put image cellsize. Default: 250 ", type=int, default=250)
-    parser.add_argument("--number_chunks", help="There is a limit of a maximum ten modis dates per reques. Default: 5 ",
-                        type=int, default=5)
+    parser.add_argument("--number_chunks", help="There is a limit of a maximum ten modis dates per reques. Default: 10 ",
+                        type=int, default=10)
 
     args = parser.parse_args()
     satellite = args.satellite
