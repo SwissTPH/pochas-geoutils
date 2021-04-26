@@ -8,8 +8,8 @@
 # For requests
 import requests, json, os, time
 import numpy as np
-import grid as gr
-import utils as ut
+from . import grid as gr
+from . import utils as ut
 from pyproj import Proj, CRS
 import datetime as dt
 import xarray as xr
