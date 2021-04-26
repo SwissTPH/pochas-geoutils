@@ -81,14 +81,14 @@ def convert_to_NetCDF(subsets,coords,ouput_crs,ouput_cellsize):
     crs = CRS.from_proj4("+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m")
     xrDataArray_CRS = xrDataArray_T.rio.write_crs(crs)
 
-    # if ouput_crs != 4326:
-    #     if ouput_cellsize is None:
-    #         raise RuntimeError(f"Please determine the cell size for projection")
-    #     else:
-    #
-    #         file = xrDataArray_CRS.rio.reproject(f"epsg:{ouput_crs}", resolution=ouput_cellsize)
-    # else:
-    #     file = xrDataArray_CRS.rio.reproject(f"epsg:{ouput_crs}")
+    if ouput_crs != 4326:
+        if ouput_cellsize is None:
+            raise RuntimeError(f"Please determine the cell size for projection")
+        else:
+
+            file = xrDataArray_CRS.rio.reproject(f"epsg:{ouput_crs}", resolution=ouput_cellsize)
+    else:
+        file = xrDataArray_CRS.rio.reproject(f"epsg:{ouput_crs}")
 
     xrDataArray_CRS.to_netcdf(f'output_{coords[0]}_{coords[1]}.nc', unlimited_dims="time", engine='netcdf4')
 
