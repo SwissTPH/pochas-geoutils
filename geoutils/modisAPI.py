@@ -8,8 +8,8 @@
 # For requests
 import requests, json, os, time
 import numpy as np
-from . import grid as gr
-from . import utils as ut
+import grid as gr
+import utils as ut
 from pyproj import Proj, CRS
 import datetime as dt
 import xarray as xr
@@ -135,9 +135,10 @@ def main():
                 for i, c in enumerate(chunks):
                     print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
                     _url = ut.getSubsetURL(url, product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
-                    _response = requests.get(_url, headers=header)
+                    _response = requests.get(_url, headers=header).json()
                     time.sleep(10)
-                    subsets.append(json.loads(_response.text))
+                    subsets.append(_response)
+                    #subsets.append(json.loads(_response.text))
                 ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
             else:
@@ -167,9 +168,11 @@ def main():
                     for i, c in enumerate(chunks):
                         print("[ " + str(i + 1) + " / " + str(len(chunks)) + " ] " + c[0] + " - " + c[-1])
                         _url = ut.getSubsetURL(url, product, coords[1], coords[0], band, c[0], c[-1], ab, lr)
-                        _response = requests.get(_url, headers=header)
+                        _response = requests.get(_url, headers=header).json()
+                        print(_response)
                         time.sleep(10)
-                        subsets.append(json.loads(_response.text))
+                        subsets.append(_response)
+                        # subsets.append(json.loads(_response.text))
                     ut.convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize)
 
 
