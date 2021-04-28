@@ -78,7 +78,7 @@ def convert_to_NetCDF(subsets,coords,ouput_crs,ouput_cellsize):
     )
     # Finally, save as netCDF:
     xrDataArray_T = xrDataArray.transpose("time", "y", "x")
-    crs = CRS.from_proj4("+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m")
+    crs = "+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m"
     xrDataArray_CRS = xrDataArray_T.rio.write_crs(crs)
 
     if ouput_crs != 4326:
