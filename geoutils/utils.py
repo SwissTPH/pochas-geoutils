@@ -4,6 +4,7 @@ import datetime as dt
 import xarray as xr
 import rioxarray
 import numpy as np
+import numpy.ma as ma
 
 # ModisAPI.py utils:
 def geometry_from_geojson(filepath):
@@ -93,7 +94,27 @@ def convert_to_NetCDF(subsets,coords,ouput_crs,ouput_cellsize):
     xrDataArray_CRS.to_netcdf(f'output_{coords[0]}_{coords[1]}.nc', unlimited_dims="time", engine='netcdf4')
 
 
+# Define the help function to be used in the main function
+def extract_point(b,rc):
+    """
+    Extract the value for the points
+    """
+    extracted_values = [b[coord[0], coord[1]] for coord in rc]
+    return extracted_values
 
+def extract_point_buffer(b,rc,s):
+    """
+    Extract the value based on the surrounded buffer
+    """
+    extracted_values = [np.mean(b[coord[0]-s:coord[0] + (s + 1), coord[1]-s:coord[1]+(s+1)]) for coord in rc]
+    return extracted_values
+
+def extract_point_buffer_mask(b,rc,s,nd):
+    """
+    Extract the value based on the surrounded buffer and mask the nodata value in calculation
+    """
+    extracted_values = [np.nanmean(ma.masked_values(b[coord[0]-s:coord[0]+(s+1), coord[1]-s:coord[1]+(s+1)], nd).filled(np.nan)) for coord in rc]
+    return extracted_values
 
 
 

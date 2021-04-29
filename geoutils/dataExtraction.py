@@ -1,12 +1,19 @@
 # Name: dataExtraction.py
 # Description: The tools to extract data from rasters
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
-# Date: 20.04.2021 Update:28.04.2021
+# Date: 20.04.2021 Update:28.04.2021; 29.04.2021
 
 import numpy as np
 import numpy.ma as ma
+import pandas as pd
 import geopandas as gpd
 import rasterio as rs
+from rasterio.io import MemoryFile
+import xarray as xr
+from affine import Affine
+import multiprocessing
+from functools import partial,reduce
+from . import utils as ut
 
 # Func 01
 def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',mask=False,nodata=0):
@@ -14,7 +21,7 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     rast_path: (str, file object or pathlib.Path object)
     gdf_path: (str, file object or pathlib.Path object)
     date: when the raster collected (str): dd_mm_yyyy. it is important for time series data
-    resample_size: The buffer around the points. For the the pint zero should be used
+    resample_size: The buffer around the points. For the the point zero should be used
     stats: The statistics should be used for aggregation
     mask: The nodata value would be masked; default:False
     nodata
@@ -32,52 +39,115 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
-# Define the help function to be used in the main function
-    def extract_point(b,rc):
-        """
-        Extract the value for the points
-        """
-        extracted_values = [b[coord[0], coord[1]] for coord in rc]
-        return extracted_values
-
-    def extract_point_buffer(b,rc,s):
-        """
-        Extract the value based on the surrounded buffer
-        """
-        extracted_values = [np.mean(band[coord[0]-s:coord[0] + (s + 1), coord[1]-s:coord[1]+(s+1)]) for coord in rowcol]
-        return extracted_values
-
-    def extract_point_buffer_mask(b,rc,s):
-        """
-        Extract the value based on the surrounded buffer and mask the nodata value in calculation
-        """
-        extracted_values = [np.nanmean(ma.masked_values(b[coord[0]-s:coord[0]+(s+1), coord[1]-s:coord[1]+(s+1)], nodata).filled(np.nan)) for coord in rc]
-        return extracted_values
-
-
     for b in img.indexes:
         band = img.read(b,out_dtype='float32')
 
         if stats == "mean":
             if size == 0:
                 if mask == False:
-                    extracted_values = extract_point(band,rowcol)
+                    extracted_values = ut.extract_point(band,rowcol)
                     gdf['band_' + str(b) + "_" + date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
-                    extracted_values = extract_point_buffer(band,rowcol,size)
+                    extracted_values = ut.extract_point_buffer(band,rowcol,size)
                     gdf['band_'+ str(b) + "_" + date] = extracted_values
                 else:
-                    extracted_values = extract_point_buffer_mask(band, rowcol, size)
+                    extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
                     gdf['band_' + str(b) + "_" + date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
     return gdf
 
-#TODO: Complete this function
-# Func 02: extract_netcdf_to_point():
-def extract_netcdf_to_point():
-    pass
+# Func 02:
+def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=0,n_job=1):
+
+    """
+    The function extract the values for each date from NetCDF. Since the NetCDF files usually are multi-temporal
+    it is decided to use multi process for each bands which can save a lot of time.
+
+    rast_path: (str, file object or pathlib.Path object)
+    gdf_path: (str, file object or pathlib.Path object)
+    resample_size: The buffer around the points. For the the point zero should be used
+    stats: The statistics should be used for aggregation
+    mask: The nodata value would be masked; default:False
+    nodata: value which should be consider as NoData value
+    """
+
+    # Get the general info
+    ds = xr.open_rasterio(ds_path)
+    ds_xarray = xr.open_dataarray(ds_path)
+
+    transform = Affine(*ds.attrs['transform'])
+    count = ds.values.shape[0]
+    height = ds.values.shape[1]
+    width = ds.values.shape[2]
+    dtype= ds.values.dtype
+    pixel_size = ds.attrs['res'][0]
+
+    if pixel_size  > 1:
+        crs = ds.attrs['crs']
+    else:
+        crs = 4326
+
+    # Define rasterio object in memory
+    rast = MemoryFile().open(
+        driver='GTiff',  # GDAL GeoTIFF driver
+        count=ds.values.shape[0],  # number of bands
+        height=ds.values.shape[1],  # length y
+        width=ds.values.shape[2],  # length x
+        crs=crs,  # srs
+        dtype='float32',  # data type
+        nodata=-9999,  # fill value
+        transform=transform  # affine transformation
+    )
+
+    # Write a data to the raster
+    rast.write(ds.values)
+
+    # Prepare the points
+    gdf = gpd.read_file(gdf_path)
+    rowcol_tuple = rast.index(gdf['geometry'].x, gdf['geometry'].y)
+    rowcol = np.asarray(rowcol_tuple).T
+
+    if resample_size > 0:
+        size = int(np.floor((resample_size/pixel_size)/2))
+    else:
+        raise RuntimeError(f"The sample size cannot be Negative")
+
+    # Help Function for parallelization
+    def multi_process(b,date):
+        band = rast.read(b, out_dtype='float32')
+
+        if stats == "mean":
+            if size == 0:
+                if mask == False:
+                    extracted_values = ut.extract_point(band,rowcol)
+                    gdf['b_' + str(b) + "_" + date] = extracted_values
+                else:
+                    raise RuntimeError(f"Extracting point cannot be with mask")
+            else:
+                if mask == False:
+                    extracted_values = ut.extract_point_buffer(band,rowcol,size)
+                    gdf['b_'+ str(b) + "_" + date] = extracted_values
+                else:
+                    extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
+                    gdf['b_' + str(b) + "_" + date] = extracted_values
+        else:
+            raise NameError(f"Mean only supported")
+
+        return gdf
+
+    # Create a list of bands and dates
+    lst_bands = list(rast.indexes)
+    lst_date = list(ds_xarray.indexes['time'].astype(str))
+
+    # parallelization each bands
+    with multiprocessing.Pool(processes=n_job) as pool:
+        result = pool.starmap(multi_process,lst_bands, lst_date)
+        gdf = reduce(lambda left, right: pd.merge(left, right, on=['BID', 'geometry']), result)
+
+    return gdf
+
