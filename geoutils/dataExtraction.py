@@ -112,10 +112,8 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
     rowcol_tuple = rast.index(gdf['geometry'].x, gdf['geometry'].y)
     rowcol = np.asarray(rowcol_tuple).T
 
-    if resample_size > 0:
+    if resample_size >= 0:
         size = int(np.floor((resample_size/pixel_size)/2))
-    elif resample_size == 0:
-        pass
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
