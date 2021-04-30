@@ -62,7 +62,7 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     return gdf
 
 # Func 02:
-def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=0,n_job=1):
+def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=-9999,n_job=1):
 
     """
     The function extract the values for each date from NetCDF. Since the NetCDF files usually are multi-temporal
@@ -95,12 +95,12 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
     # Define rasterio object in memory
     rast = MemoryFile().open(
         driver='GTiff',  # GDAL GeoTIFF driver
-        count=ds.values.shape[0],  # number of bands
-        height=ds.values.shape[1],  # length y
-        width=ds.values.shape[2],  # length x
+        count=count,  # number of bands
+        height=height,  # length y
+        width=width,  # length x
         crs=crs,  # srs
-        dtype='float32',  # data type
-        nodata=-9999,  # fill value
+        dtype=dtype,  # data type
+        nodata=nodata,  # fill value
         transform=transform  # affine transformation
     )
 
