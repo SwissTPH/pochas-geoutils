@@ -146,7 +146,7 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
 
     # parallelization each bands
     with multiprocessing.Pool(processes=n_job) as pool:
-        result = pool.starmap(multi_process,lst_bands, lst_date)
+        result = pool.starmap(multi_process,zip(lst_bands, lst_date))
         gdf = reduce(lambda left, right: pd.merge(left, right, on=['BID', 'geometry']), result)
 
     return gdf
