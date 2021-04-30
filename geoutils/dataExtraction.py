@@ -34,6 +34,8 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
 
     if resample_size > 0:
         size = int(np.floor((resample_size/pixel_size)/2))
+    elif resample_size == 0:
+        pass
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
@@ -112,6 +114,8 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
 
     if resample_size > 0:
         size = int(np.floor((resample_size/pixel_size)/2))
+    elif resample_size == 0:
+        pass
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
