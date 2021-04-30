@@ -117,8 +117,6 @@ def extract_point_buffer_mask(b,rc,s,nd):
     return extracted_values
 
 
-
-
 def list_files_with_absolute_paths(dirpath,endswith=None):
     if endswith is None:
         files = []
