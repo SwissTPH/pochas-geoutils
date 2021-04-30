@@ -117,29 +117,6 @@ def extract_point_buffer_mask(b,rc,s,nd):
     return extracted_values
 
 
-# Help Function for parallelization of NetCDF
-def multi_process_netcdf(b, date, rast, gdf, rowcol, size,nodata,mask,stats='mean'):
-    band = rast.read(b, out_dtype='float32')
-
-    if stats == "mean":
-        if size == 0:
-            if mask == False:
-                extracted_values = extract_point(band,rowcol)
-                gdf['b_' + str(b) + "_" + date] = extracted_values
-            else:
-                raise RuntimeError(f"Extracting point cannot be with mask")
-        else:
-            if mask == False:
-                extracted_values = extract_point_buffer(band,rowcol,size)
-                gdf['b_'+ str(b) + "_" + date] = extracted_values
-            else:
-                extracted_values = extract_point_buffer_mask(band, rowcol, size,nodata)
-                gdf['b_' + str(b) + "_" + date] = extracted_values
-    else:
-        raise NameError(f"Mean only supported")
-
-    return gdf
-
 def list_files_with_absolute_paths(dirpath,endswith=None):
     if endswith is None:
         files = []

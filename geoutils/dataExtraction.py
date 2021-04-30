@@ -62,7 +62,7 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     return gdf
 
 # Func 02:
-def extract_netcdf(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=-9999,n_job=1):
+def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=-9999):
 
     """
     The function extract the values for each date from NetCDF. Since the NetCDF files usually are multi-temporal
@@ -117,15 +117,32 @@ def extract_netcdf(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
-    # Create a list of bands and dates
-    lst_bands = list(rast.indexes)
+    # Create a list of  dates
     lst_date = list(ds_xarray.indexes['time'].astype(str))
+    # Help Function for parallelization
+    for b in rast.indexes:
+        for date in lst_date:
+            band = rast.read(b, out_dtype='float32')
 
-    # parallelization each bands
-    func = partial(ut.multi_process_netcdf, rast, gdf, rowcol, size,nodata,mask,stats='mean')
-    with multiprocessing.Pool(processes=n_job) as pool:
-        result = pool.starmap(func,zip(lst_bands, lst_date))
-        gdf = reduce(lambda left, right: pd.merge(left, right, on=['BID', 'geometry']), result)
+            if stats == "mean":
+                if size == 0:
+                    if mask == False:
+                        print(gdf['b_' + str(b) + "_" + date])
+                        extracted_values = ut.extract_point(band,rowcol)
+                        gdf['b_' + str(b) + "_" + date] = extracted_values
+                    else:
+                        raise RuntimeError(f"Extracting point cannot be with mask")
+                else:
+                    if mask == False:
+                        print(gdf['b_' + str(b) + "_" + date])
+                        extracted_values = ut.extract_point_buffer(band,rowcol,size)
+                        gdf['b_'+ str(b) + "_" + date] = extracted_values
+                    else:
+                        print(gdf['b_' + str(b) + "_" + date])
+                        extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
+                        gdf['b_' + str(b) + "_" + date] = extracted_values
+            else:
+                raise NameError(f"Mean only supported")
 
-    return gdf
+            return gdf
 
