@@ -32,10 +32,8 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     # Calcualte the pixel size of the image
     pixel_size = img.transform[0]
 
-    if resample_size > 0:
+    if resample_size >= 0:
         size = int(np.floor((resample_size/pixel_size)/2))
-    elif resample_size == 0:
-        pass
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
@@ -46,16 +44,16 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
             if size == 0:
                 if mask == False:
                     extracted_values = ut.extract_point(band,rowcol)
-                    gdf['band_' + str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
                     extracted_values = ut.extract_point_buffer(band,rowcol,size)
-                    gdf['band_'+ str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
                 else:
                     extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
-                    gdf['band_' + str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
