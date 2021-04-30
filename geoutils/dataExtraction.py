@@ -127,18 +127,18 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
                 if mask == False:
                     # print('b' + str(b) + "_" + date)
                     extracted_values = ut.extract_point(band,rowcol)
-                    gdf['b' + str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
                     # print('b' + str(b) + "_" + date)
                     extracted_values = ut.extract_point_buffer(band,rowcol,size)
-                    gdf['b'+ str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
                 else:
                     # print('b' + str(b) + "_" + date)
                     extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
-                    gdf['b' + str(b) + "_" + date] = extracted_values
+                    gdf[date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
