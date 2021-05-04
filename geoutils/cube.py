@@ -2,7 +2,7 @@
 # Description: The tools to generate a cube from rasters
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
 # Date: 07.04.2021
-# Update: 23.04.2021
+# Update: 23.04.2021; 04.05.2021
 
 
 import xarray as xr
@@ -13,35 +13,41 @@ from pathlib import Path, PosixPath
 import os
 from . import utils as ut
 
+def get_imgs(img_list,chunks=(1000,1000)):
+    """open the rasters as Dask dataArray"""
+    series = [xr.open_rasterio(i,chunks={'x': chunks[0], 'y': chunks[1]}) for i in img_list]
+    return series
+
 
 class cube:
-    def __init__(self, rast_list, start_date, end_date, freq):
+    def __init__(self, rast_list):
         self.rast_list = rast_list
-        self.start_date = start_date
-        self.end_date = end_date
-        self.freq = freq
 
     # Func 01
-    def generate_cube(self):
+    def generate_cube(self,start_date, end_date,freq):
         # Concatenate image series
         concat_img = xr.concat(self.rast_list, "time")
         # Add variable name
         concat_img = concat_img.rename('raster')
         # Add timestamp to data
-        time = pd.date_range(start=self.start_date, end=self.end_date, freq=self.freq)
+        time = pd.date_range(start=start_date, end=end_date, freq=freq)
         concat_img = concat_img.assign_coords({"time": time})
         return concat_img
 
     # Func 02
-    def generate_mosaic(self, resample_time=None):
-        if resample_time == None:
-            raise RuntimeError(f"Resample frequency should be determined")
+    def generate_mosaic(self):
+        no_of_bands = max(self.rast_list[0].coords['band'].values)
+        crs = int(self.rast_list[0].attrs['crs'][-4:])
 
-        cub = cube(self.rast_list, self.start_date, self.end_date, self.freq).generate_cube()
-        crs = int(cub.attrs['crs'][-4:])
-        agg_img = cub.resample(time=resample_time).median()
-        agg_img = agg_img.rio.write_crs(crs)
-        return agg_img
+        bands_medians = []
+        for b in range(no_of_bands):
+            bands = [rast.sel(band=b + 1) for rast in self.rast_list]
+            bands_comp = xr.concat(bands, dim='band')
+            bands_medians.append(bands_comp.median(dim='band', skipna=True))
+
+        bands_medians_cont = xr.concat(bands_medians, dim='band')
+        crs_img = bands_medians_cont.rio.write_crs(crs)
+        return crs_img
 
 
 # Func 03

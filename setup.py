@@ -8,7 +8,7 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.5.0",
+    version="0.5.1",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -26,6 +26,7 @@ setup(
     entry_points={
             "console_scripts": [
                 "modisAPI=geoutils.modisAPI:main",
+                "LandsatGLAD=geoutils.LandsatGLAD:main",
             ]
         },
 )
