@@ -44,16 +44,16 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
             if size == 0:
                 if mask == False:
                     extracted_values = ut.extract_point(band,rowcol)
-                    gdf[date+'b_'+str(b)] = extracted_values
+                    gdf['b_'+str(b)+"_"+date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
                     extracted_values = ut.extract_point_buffer(band,rowcol,size)
-                    gdf[date+'b_'+str(b)] = extracted_values
+                    gdf['b_'+str(b)+"_"+date] = extracted_values
                 else:
                     extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
-                    gdf[date+'b_'+str(b)] = extracted_values
+                    gdf['b_'+str(b)+"_"+date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
