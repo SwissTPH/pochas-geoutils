@@ -53,18 +53,12 @@ class grid:
         :return: polygon object (Geo-DataFrame)
         """
 
-        df = grid(self.xmin, self.xmax, self.ymin, self.ymax, self.cell_size).generate_point(center=False)
-        a = df['coords'].bounds
-        lst1 = [a.loc[i] for i in range(a.shape[0])]
+        df = grid(self.xmin, self.xmax, self.ymin, self.ymax, self.cell_size).generate_point(center=True)['coords']
+        cell_cds = np.vstack([df.x, df.y]).T
+        cs = np.apply_along_axis(lambda x: box(x[0] - self.cell_size/2, x[1] - self.cell_size/2, x[0] + self.cell_size/2, x[1] + self.cell_size/2), 1, cell_cds)
 
-        lst2 = [Polygon([(xmin, ymin), (xmin + self.cell_size, ymin), (xmin + self.cell_size, ymin + self.cell_size),
-                         (xmin, ymin + self.cell_size)]) for xmin, ymin, xmax, ymax in lst1]
+        gdf = gpd.GeoDataFrame(cs, columns=['geom'],crs=self.crs,geometry='geom')
 
-        df = pd.DataFrame(lst2, columns=['geom'])
-        gdf = gpd.GeoDataFrame(df, geometry='geom')
-
-        if self.crs != 4326:
-            gdf.set_crs(crs=self.crs, inplace=True)
         return gdf
 
     def cells_within_polygon(self, gdf):
