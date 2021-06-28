@@ -36,6 +36,7 @@ class cube:
 
     # Func 02
     def generate_mosaic(self):
+        # Todo: median is not yet implemented on dask arrays, otherwise it is possible to use `group by` method to do this part
         no_of_bands = max(self.rast_list[0].coords['band'].values)
         crs = int(self.rast_list[0].attrs['crs'][-4:])
 
