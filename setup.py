@@ -8,8 +8,8 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.2.0",
-    description="A Python package includes geo-utils for POCHAS project",
+    version="0.5.1",
+    description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
     url="https://github.com/behzad89/pochas-geoutils",
@@ -22,5 +22,11 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=["geoutils"],
-    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray"],
+    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio","netcdf4","requests"],
+    entry_points={
+            "console_scripts": [
+                "modisAPI=geoutils.modisAPI:main",
+                "LandsatGLAD=geoutils.LandsatGLAD:main",
+            ]
+        },
 )
