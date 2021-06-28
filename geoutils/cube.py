@@ -24,13 +24,13 @@ class cube:
         self.rast_list = rast_list
 
     # Func 01
-    def generate_cube(self,start_date, end_date,freq):
+    def generate_cube(self,start_date,freq):
         # Concatenate image series
         concat_img = xr.concat(self.rast_list, "time")
         # Add variable name
         concat_img = concat_img.rename('raster')
         # Add timestamp to data
-        time = pd.date_range(start=start_date, end=end_date, freq=freq)
+        time = pd.date_range(start=start_date, periods=len(self.rast_list), freq=freq)
         concat_img = concat_img.assign_coords({"time": time})
         return concat_img
 
