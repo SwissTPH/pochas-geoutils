@@ -1,14 +1,15 @@
 from setuptools import setup
 
+
 def readme():
-    with open('README.md') as f:
+    with open("README.md") as f:
         README = f.read()
     return README
 
 
 setup(
     name="pochas-geoutils",
-    version="0.5.1",
+    version="0.0.1",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -22,11 +23,21 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=["geoutils"],
-    install_requires=["numpy","geopandas","shapely","pandas","xarray","rioxarray","rasterio","netcdf4","requests"],
+    install_requires=[
+        "numpy",
+        "geopandas",
+        "shapely",
+        "pandas",
+        "xarray",
+        "rioxarray",
+        "rasterio",
+        "netcdf4",
+        "requests",
+    ],
     entry_points={
-            "console_scripts": [
-                "modisAPI=geoutils.modisAPI:main",
-                "LandsatGLAD=geoutils.LandsatGLAD:main",
-            ]
-        },
+        "console_scripts": [
+            "modisAPI=geoutils.modisAPI:main",
+            "LandsatGLAD=geoutils.LandsatGLAD:main",
+        ]
+    },
 )

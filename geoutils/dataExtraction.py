@@ -1,10 +1,12 @@
 # Name: dataExtraction.py
 # Description: The tools to extract data from rasters
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
-# Date: 20.04.2021 Update:28.04.2021; 29.04.2021
+# Date: 20.04.2021 Update:28.04.2021; 29.04.2021, 07.01.2022
 
+from typing import List
 import numpy as np
 import numpy.ma as ma
+import numpy.typing as npt
 import pandas as pd
 import geopandas as gpd
 import rasterio as rs
@@ -14,11 +16,19 @@ from affine import Affine
 from . import utils as ut
 
 # Func 01
-def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',mask=False,nodata=0):
+def extract_geotif_to_point(
+    rast_path: str,
+    date: str,
+    gdf_path: str,
+    resample_size,
+    stats: str = "mean",
+    mask: bool = False,
+    nodata: int = 0,
+):
     """
     rast_path: (str, file object or pathlib.Path object)
-    gdf_path: (str, file object or pathlib.Path object)
     date: when the raster collected (str): dd_mm_yyyy. it is important for time series data
+    gdf_path: (str, file object or pathlib.Path object)
     resample_size: The buffer around the points. For the the point zero should be used
     stats: The statistics should be used for aggregation
     mask: The nodata value would be masked; default:False
@@ -26,41 +36,51 @@ def extract_geotif_to_point(rast_path,date,gdf_path,resample_size,stats='mean',m
     """
     img = rs.open(rast_path)
     gdf = gpd.read_file(gdf_path)
-    rowcol_tuple = img.index(gdf['geometry'].x, gdf['geometry'].y)
+    rowcol_tuple = img.index(gdf["geometry"].x, gdf["geometry"].y)
     rowcol = np.asarray(rowcol_tuple).T
 
     # Calcualte the pixel size of the image
     pixel_size = img.transform[0]
 
     if resample_size >= 0:
-        size = int(np.floor((resample_size/pixel_size)/2))
+        size = int(np.floor((resample_size / pixel_size) / 2))
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
     for b in img.indexes:
-        band = img.read(b,out_dtype='float32')
+        band = img.read(b, out_dtype="float32")
 
         if stats == "mean":
             if size == 0:
                 if mask == False:
-                    extracted_values = ut.extract_point(band,rowcol)
-                    gdf['b_'+str(b)+"_"+date] = extracted_values
+                    extracted_values = ut.extract_point(band, rowcol)
+                    gdf["b_" + str(b) + "_" + date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
-                    extracted_values = ut.extract_point_buffer(band,rowcol,size)
-                    gdf['b_'+str(b)+"_"+date] = extracted_values
+                    extracted_values = ut.extract_point_buffer(band, rowcol, size)
+                    gdf["b_" + str(b) + "_" + date] = extracted_values
                 else:
-                    extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
-                    gdf['b_'+str(b)+"_"+date] = extracted_values
+                    extracted_values = ut.extract_point_buffer_mask(
+                        band, rowcol, size, nodata
+                    )
+                    gdf["b_" + str(b) + "_" + date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
     return gdf
 
+
 # Func 02:
-def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=False,nodata=-9999):
+def extract_netcdf_to_point(
+    ds_path: str,
+    gdf_path: str,
+    resample_size: int,
+    stats: str = "mean",
+    mask: bool = False,
+    nodata: int = -9999,
+):
 
     """
     The function extract the values for each date from NetCDF. Since the NetCDF files usually are multi-temporal
@@ -78,28 +98,28 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
     ds = xr.open_rasterio(ds_path)
     ds_xarray = xr.open_dataarray(ds_path)
 
-    transform = Affine(*ds.attrs['transform'])
+    transform = Affine(*ds.attrs["transform"])
     count = ds.values.shape[0]
     height = ds.values.shape[1]
     width = ds.values.shape[2]
-    dtype= ds.values.dtype
-    pixel_size = ds.attrs['res'][0]
+    dtype = ds.values.dtype
+    pixel_size = ds.attrs["res"][0]
 
-    if pixel_size  > 1:
-        crs = ds.attrs['crs']
+    if pixel_size > 1:
+        crs = ds.attrs["crs"]
     else:
         crs = 4326
 
     # Define rasterio object in memory
     rast = MemoryFile().open(
-        driver='GTiff',  # GDAL GeoTIFF driver
+        driver="GTiff",  # GDAL GeoTIFF driver
         count=count,  # number of bands
         height=height,  # length y
         width=width,  # length x
         crs=crs,  # srs
         dtype=dtype,  # data type
         nodata=nodata,  # fill value
-        transform=transform  # affine transformation
+        transform=transform,  # affine transformation
     )
 
     # Write a data to the raster
@@ -107,38 +127,56 @@ def extract_netcdf_to_point(ds_path,gdf_path,resample_size,stats='mean',mask=Fal
 
     # Prepare the points
     gdf = gpd.read_file(gdf_path)
-    rowcol_tuple = rast.index(gdf['geometry'].x, gdf['geometry'].y)
+    rowcol_tuple = rast.index(gdf["geometry"].x, gdf["geometry"].y)
     rowcol = np.asarray(rowcol_tuple).T
 
     if resample_size >= 0:
-        size = int(np.floor((resample_size/pixel_size)/2))
+        size = int(np.floor((resample_size / pixel_size) / 2))
     else:
         raise RuntimeError(f"The sample size cannot be Negative")
 
     # Create a list of  dates
-    lst_date = list(ds_xarray.indexes['time'].astype(str))
+    lst_date = list(ds_xarray.indexes["time"].astype(str))
     # Help Function for parallelization
-    for b,date in zip(rast.indexes,lst_date):
-        band = rast.read(b, out_dtype='float32')
+    for b, date in zip(rast.indexes, lst_date):
+        band = rast.read(b, out_dtype="float32")
         if stats == "mean":
             if size == 0:
                 if mask == False:
                     # print('b' + str(b) + "_" + date)
-                    extracted_values = ut.extract_point(band,rowcol)
+                    extracted_values = ut.extract_point(band, rowcol)
                     gdf[date] = extracted_values
                 else:
                     raise RuntimeError(f"Extracting point cannot be with mask")
             else:
                 if mask == False:
                     # print('b' + str(b) + "_" + date)
-                    extracted_values = ut.extract_point_buffer(band,rowcol,size)
+                    extracted_values = ut.extract_point_buffer(band, rowcol, size)
                     gdf[date] = extracted_values
                 else:
                     # print('b' + str(b) + "_" + date)
-                    extracted_values = ut.extract_point_buffer_mask(band, rowcol, size,nodata)
+                    extracted_values = ut.extract_point_buffer_mask(
+                        band, rowcol, size, nodata
+                    )
                     gdf[date] = extracted_values
         else:
             raise NameError(f"Mean only supported")
 
     return gdf
 
+
+def extract_class(image: npt.ArrayLike, codes: list, new_code: int):
+    """
+    This function split different high-level classes based on
+    the sub-classes
+
+    image: The original image to extract the groups <np.array>
+    codes: The list of the codes which should be extracted <List>
+    new_code: The code which should be determined to the new class <int>
+    """
+
+    mask = np.isin(image, codes) * image  # Mask the agricultural areas
+    category = np.where(
+        np.isin(mask, codes), new_code, 0
+    )  # Convert the mask to the binary image
+    return category
