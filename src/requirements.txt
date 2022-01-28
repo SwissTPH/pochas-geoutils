@@ -7,3 +7,4 @@ rioxarray
 rasterio
 netCDF4==1.5.8
 requests
+Sphinx==4.4.0
