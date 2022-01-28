@@ -1,4 +1,4 @@
-<center><img src="https://github.com/behzad89/pochas-geoutils/blob/main/src/pochas_geoutils.JPG" width="400" height="150"/></center>
+<center><img src="https://github.com/behzad89/pochas-geoutils/blob/main/src/pochas_geoutils.JPG" width="200" height="200"/></center>
 
 # pochas-geoutils Python Package
 
@@ -14,7 +14,8 @@ A description of pochas-geoutils's functionality can be found [here]().
   `pip install git+https://github.com/behzad89/pochas-geoutils.git`
 - _pip_:
   `pip install pochas-geoutils`\
-  Detailed instructions can be found in the documentation [here]().
+
+Detailed instructions can be found in the documentation [here]().
 
 # Tutorial
 
