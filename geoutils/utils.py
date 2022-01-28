@@ -7,7 +7,7 @@ import numpy as np
 import numpy.ma as ma
 
 # ModisAPI.py utils:
-def geometry_from_geojson(filepath):
+def geometry_from_geojson(filepath: str):
     with open(filepath, "r") as f:
         json_obj = json.load(f)
 
@@ -41,7 +41,7 @@ def geometry_from_geojson(filepath):
 """yield successive n-sized chunks from list l"""
 
 
-def chunk(l, n):
+def chunk(l: int, n: int):
     for i in range(0, len(l), n):
         yield l[i : i + n]
 
@@ -49,7 +49,17 @@ def chunk(l, n):
 """assemble request URL string"""
 
 
-def getSubsetURL(url, prod, lat, lon, band, sd, ed, ab, lr):
+def getSubsetURL(
+    url: str,
+    prod: str,
+    lat: float,
+    lon: float,
+    band: int,
+    sd: str,
+    ed: str,
+    ab: float,
+    lr: float,
+):
     return "".join(
         [
             url,
@@ -160,7 +170,7 @@ def extract_point_buffer_mask(b, rc, s, nd):
     return extracted_values
 
 
-def list_files_with_absolute_paths(dirpath, endswith=None):
+def list_files_with_absolute_paths(dirpath: str, endswith: str = None):
     if endswith is None:
         files = []
         for dirname, dirnames, filenames in os.walk(dirpath):
@@ -176,7 +186,7 @@ def list_files_with_absolute_paths(dirpath, endswith=None):
     return files
 
 
-def list_files(dirpath, endswith=None):
+def list_files(dirpath: str, endswith: str = None):
     if endswith is not None:
         files = []
         for dirname, dirnames, filenames in os.walk(dirpath):

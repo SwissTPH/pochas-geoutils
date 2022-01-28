@@ -13,10 +13,10 @@ import pandas as pd
 from pathlib import Path, PosixPath
 import os
 from . import utils as ut
-from typing import Set
+from typing import Set, List
 
 
-def get_imgs(img_list: list, chunks: Set[int] = (1000, 1000)):
+def get_imgs(img_list: List[str], chunks: Set[int] = (1000, 1000)):
     """open the rasters as Dask dataArray"""
     series = [
         xr.open_rasterio(i, chunks={"x": chunks[0], "y": chunks[1]}) for i in img_list

@@ -1,5 +1,6 @@
 # functions to manage the data prepration
 import pandas as pd
+from typing import Set, List
 
 
 def rename_column_name(df: pd.DataFram, old_column_list: list, new_column_list: list):
@@ -13,7 +14,7 @@ def rename_column_name(df: pd.DataFram, old_column_list: list, new_column_list: 
     return df
 
 
-def remove_whitespace(df: pd.DataFram, skip_rows: str = None):
+def remove_whitespace(df: pd.DataFrame, skip_rows: str = None):
     """
     :param df: Datafrrame whcih should be checked for white space
     :param skip_rows: list of the columns which should be ignored
@@ -30,7 +31,7 @@ def remove_whitespace(df: pd.DataFram, skip_rows: str = None):
     return df
 
 
-def transla(ee: list, language_1: list, language_2: list):
+def transla(ee: List[str], language_1: List[str], language_2: List[str]):
     """
     :param ee: The name of each row
     :param language_1: List of the first language
