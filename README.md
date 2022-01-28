@@ -11,7 +11,7 @@ A description of pochas-geoutils's functionality can be found [here]().
 - _GitHUB_:
   `pip install git+https://github.com/behzad89/pochas-geoutils.git`
 - _pip_:
-  `pip install pochas-geoutils`\
+  `pip install pochas-geoutils`
 
 Detailed instructions can be found in the documentation [here]().
 
