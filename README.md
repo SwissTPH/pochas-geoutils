@@ -1,4 +1,4 @@
-<center><img src="https://github.com/behzad89/pochas-geoutils/tree/main/src/pochas_geoutils.JPG" width="400" height="150"/></center>
+<center><img src="https://github.com/behzad89/pochas-geoutils/blob/main/src/pochas_geoutils.JPG" width="400" height="150"/></center>
 
 # pochas-geoutils Python Package
 
@@ -13,7 +13,7 @@ A description of pochas-geoutils's functionality can be found [here]().
 - _GitHUB_:
   `pip install git+https://github.com/behzad89/pochas-geoutils.git`
 - _pip_:
-  `pip install pochas-geoutils`
+  `pip install pochas-geoutils`\
   Detailed instructions can be found in the documentation [here]().
 
 # Tutorial
@@ -22,4 +22,4 @@ A jupyter notebook and test data are available [here](https://github.com/behzad8
 
 # Dockerfile
 
-The Dockerimage to setup the python container is provided on the **ubuntu:20.04** environment [here](https://github.com/behzad89/pochas-geoutils/tree/main/src).
+The Dockerimage to setup the **python container** is provided on the **ubuntu:20.04** environment [here](https://github.com/behzad89/pochas-geoutils/tree/main/src).
