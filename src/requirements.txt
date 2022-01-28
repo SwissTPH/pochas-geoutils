@@ -5,6 +5,5 @@ pandas==1.2.5
 xarray
 rioxarray
 rasterio
-netCDF4
+netCDF4==1.5.8
 requests
-pochas-geoutils==0.0.1
