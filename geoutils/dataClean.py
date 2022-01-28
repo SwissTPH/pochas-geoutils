@@ -3,7 +3,9 @@ import pandas as pd
 from typing import Set, List
 
 
-def rename_column_name(df: pd.DataFram, old_column_list: list, new_column_list: list):
+def rename_column_name(
+    df: pd.DataFrame, old_column_list: List[str], new_column_list: List[str]
+):
     """
     :param df: Datafrmae which want to change the name of the columns
     :param old_column_list: List of the old columns' name
@@ -31,17 +33,17 @@ def remove_whitespace(df: pd.DataFrame, skip_rows: str = None):
     return df
 
 
-def transla(ee: List[str], language_1: List[str], language_2: List[str]):
+def transla(name_row: List[str], language_1: List[str], language_2: List[str]):
     """
-    :param ee: The name of each row
+    :param name_row: The name in row
     :param language_1: List of the first language
     :param language_2: List of the second language
     :return: translated name for each row
 
-    Usage:
+    Usage:\
     gdf['type_eng'] = gdf['type'].apply(transla,args=(lst_1,lst_2))
     """
     b = [(a[0], a[1]) for a in zip(language_1, language_2)]
     for tup in b:
-        if tup[0].lower() == ee.lower():
+        if tup[0].lower() == name_row.lower():
             return tup[1].lower()

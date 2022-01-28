@@ -24,15 +24,18 @@ def extract_geotif_to_point(
     stats: str = "mean",
     mask: bool = False,
     nodata: int = 0,
-):
+) -> gpd.GeoDataFrame:
     """
-    rast_path: (str, file object or pathlib.Path object)
-    date: when the raster collected (str): dd_mm_yyyy. it is important for time series data
-    gdf_path: (str, file object or pathlib.Path object)
-    resample_size: The buffer around the points. For the the point zero should be used
-    stats: The statistics should be used for aggregation
-    mask: The nodata value would be masked; default:False
-    nodata
+    The function extract the values for each date from GeoTIFF raster image
+
+    :param rast_path: (file object or pathlib.Path object)
+    :param date: when the raster collected (Form: dd_mm_yyyy). it is important for time series data
+    :param gdf_path: (str, file object or pathlib.Path object)
+    :param resample_size: The buffer around the points. For the the point zero should be used
+    :param stats: The statistics should be used for aggregation
+    :param mask: The nodata value would be masked; default:False
+    :param nodata: value which should be consider as NoData value, default:0
+    :return: gpd.GeoDataFrame
     """
     img = rs.open(rast_path)
     gdf = gpd.read_file(gdf_path)
@@ -80,18 +83,19 @@ def extract_netcdf_to_point(
     stats: str = "mean",
     mask: bool = False,
     nodata: int = -9999,
-):
+) -> gpd.GeoDataFrame:
 
     """
     The function extract the values for each date from NetCDF. Since the NetCDF files usually are multi-temporal
     it is decided to use multi process for each bands which can save a lot of time.
 
-    rast_path: (str, file object or pathlib.Path object)
-    gdf_path: (str, file object or pathlib.Path object)
-    resample_size: The buffer around the points. For the the point zero should be used
-    stats: The statistics should be used for aggregation
-    mask: The nodata value would be masked; default:False
-    nodata: value which should be consider as NoData value
+    :param rast_path: (str, file object or pathlib.Path object)
+    :param gdf_path: (str, file object or pathlib.Path object)
+    :param resample_size: The buffer around the points. For the the point zero should be used
+    :param stats: The statistics should be used for aggregation
+    :param mask: The nodata value would be masked; default:False
+    :param nodata: value which should be consider as NoData value, default:0
+    :return: gpd.GeoDataFrame
     """
 
     # Get the general info
@@ -165,14 +169,15 @@ def extract_netcdf_to_point(
     return gdf
 
 
-def extract_class(image: npt.ArrayLike, codes: list, new_code: int):
+def extract_class(image: npt.ArrayLike, codes: List[int], new_code: int):
     """
     This function split different high-level classes based on
     the sub-classes
 
-    image: The original image to extract the groups <np.array>
-    codes: The list of the codes which should be extracted <List>
-    new_code: The code which should be determined to the new class <int>
+    :param image: The original image to extract the groups 
+    :param codes: The list of the codes which should be extracted 
+    :param new_code: The code which should be determined to the new class
+    :return: npt.ArrayLike
     """
 
     mask = np.isin(image, codes) * image  # Mask the agricultural areas

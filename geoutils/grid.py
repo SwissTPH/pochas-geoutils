@@ -8,6 +8,8 @@ import geopandas as gpd
 from shapely.geometry import Polygon, LineString, Point, MultiPoint, box
 import pandas as pd
 
+gpd.GeoDataFrame
+
 
 class grid:
     def __init__(
@@ -19,6 +21,14 @@ class grid:
         cell_size: float,
         crs: int = 4326,
     ):
+        """
+        Generate a reqular grid or point
+
+        :param xmin: The left-low corner X coordinate
+        :param xmax: The right-up corner X coordinate
+        :param ymin: The left-low corner Y coordinate
+        :param ymax: The right-up corner Y coordinate
+        """
         self.xmin = xmin
         self.xmax = xmax
         self.ymin = ymin
@@ -27,11 +37,13 @@ class grid:
         self.cell_size = cell_size
         self.crs = crs
 
-    def generate_point(self, center: bool = True):
+    def generate_point(self, center: bool = True) -> gpd.GeoDataFrame:
 
         """
         The function generate the points based on the bbox received from user
-        :return: Points object
+        
+        :param center: whether to generate point for center of the grid or not
+        :return: gpd.GeoDataFrame
         """
 
         if center == True:
@@ -60,11 +72,12 @@ class grid:
 
         return gdf1
 
-    def generate_grid(self):
+    def generate_grid(self) -> gpd.GeoDataFrame:
 
         """
         The function generate the Grid based on the bbox received from user
-        :return: polygon object (Geo-DataFrame)
+
+        :return: -> gpd.GeoDataFrame
         """
 
         df = grid(
@@ -86,9 +99,10 @@ class grid:
 
         return gdf
 
-    def cells_within_polygon(self, gdf: gpd.GeoDataFrame):
+    def cells_within_polygon(self, gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         """
         Generate cells inside the polygons
+
         :return: The geo-dataframe of cells inside the polygons
         """
         crs = gdf.crs
@@ -117,12 +131,12 @@ def generate_BID(
 ):
     """
     The function generate ID for each cells in the grid
+
     :param gdf: Geopandas Data Frame
     :param coords: the name of the coordinate column
     :param x: optional: if the center of the cells are available could be determined with y
     :param y: optional
-    :param circularity: Determine roundness of polygon
-                    https://gis.stackexchange.com/questions/374053/determine-roundness-of-polygon-in-qgis
+    :param circularity: Determine roundness of polygon https://gis.stackexchange.com/questions/374053/determine-roundness-of-polygon-in-qgis
     :return: The unique ID for each cell in the grid
     """
     gdf1 = gdf.copy()

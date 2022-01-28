@@ -23,6 +23,16 @@ def mosaic_from_tiles(
     mask: int = None,
     format: str = "GeoTiff",
 ):
+    """
+    The function generate a mosaic from the tiles. All the tiles should be in the same projection
+
+    :param in_put_path: The path to tiles
+    :param out_put_path: Output path to save the generated mosaic
+    :param dtype: data type
+    :param nodata: NAN value which should be assigned
+    :param format: Image format can be GeoTIFF or NetCDF
+    :return: The saved image in the disk
+    """
     in_path = Path(in_put_path)
     out_path = Path(out_put_path)
 
@@ -48,9 +58,13 @@ def mosaic_from_tiles(
 
 def exract_boundry(original_img: str, source_img: str, out_path: str, crs: str):
     """
-    The function 
-    original_img: The image should be mapped to the source image
-    source_image: The image which should not be changed
+    The function allign the original image with source image
+
+    :param original_img: The image should be mapped to the source image
+    :param source_image: The image which should not be changed
+    :param out_path: Output path to save the image
+    :param crs: the output image projection
+    :return: The saved image in the disk
     """
     original_ = rs.open(original_img)
     source_ = rs.open(source_img)

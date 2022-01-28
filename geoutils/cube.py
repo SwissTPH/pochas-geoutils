@@ -13,11 +13,19 @@ import pandas as pd
 from pathlib import Path, PosixPath
 import os
 from . import utils as ut
-from typing import Set, List
+from typing import Set, List, Optional
 
 
-def get_imgs(img_list: List[str], chunks: Set[int] = (1000, 1000)):
-    """open the rasters as Dask dataArray"""
+def get_imgs(
+    img_list: List[str], chunks: Set[int] = (1000, 1000)
+) -> List[xr.DataArray]:
+    """
+    Opens the rasters as Dask dataArray
+
+    :param img_list: The list of the image name/path
+    :param chunks: The chunk size
+    :return: list of the opend images (list)
+    """
     series = [
         xr.open_rasterio(i, chunks={"x": chunks[0], "y": chunks[1]}) for i in img_list
     ]
@@ -26,13 +34,21 @@ def get_imgs(img_list: List[str], chunks: Set[int] = (1000, 1000)):
 
 class cube:
     def __init__(self, rast_list):
+        """
+        To generate the data cube from individual raster files. The list can be generated using `get_imgs` function
+
+        :param rast_list: The list of the xarray.DataArray 
+        """
         self.rast_list = rast_list
 
     # Func 01
     def generate_cube(self, start_date: str, freq: str):
         """
+        Generate a data cube from the list of the xarray.DataArray 
+
         :param start_date: The first raster acqusition date
         :param start_date: Frequency to collect the image
+        :return: xarray.DataArray
         """
         # Concatenate image series
         concat_img = xr.concat(self.rast_list, "time")
@@ -46,6 +62,11 @@ class cube:
     # Func 02
     def generate_mosaic(self):
         # Todo: median is not yet implemented on dask arrays, otherwise it is possible to use `group by` method to do this part
+        """
+        Generate the mosaic with calculation median over time from the list of the xarray.DataArray 
+
+        :return: xarray.DataArray
+        """
         no_of_bands = max(self.rast_list[0].coords["band"].values)
         crs = int(self.rast_list[0].attrs["crs"][-4:])
 
@@ -61,7 +82,18 @@ class cube:
 
 
 # Func 03
-def to_tif(file, path: str, crs: int = 4326, cell_size: int = None):
+def to_tif(
+    file: xr.DataArray, path: str, crs: int = 4326, cell_size: Optional[int] = None
+):
+    """
+    Save the generated cube or mosaic to GeoTIFF format
+
+    :param file: xarray.DataArray
+    :param path: The path to save the file
+    :param crs: The coordinate system to save image
+    :param cell_size: The cell size for resampling
+    :return: The saved GeoTiff file on the disk
+    """
     file = file.squeeze()
 
     if cell_size is None:
