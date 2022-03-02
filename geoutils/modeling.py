@@ -49,22 +49,27 @@ def cal_error_metrics(y: npt.ArrayLike, y_pred: npt.ArrayLike):
     return train_test_full_error
 
 
-def scatter_plot(y: npt.ArrayLike, y_pred: npt.ArrayLike):
+def scatter_plot(y: npt.ArrayLike, y_pred: npt.ArrayLike, save_path: str = None):
     """
     scatter plot the true vaues and predicted values
 
     :param y: True values for dependant variable
-    :param y_pred: Predicted values for dependant variable 
+    :param y_pred: Predicted values for dependant variable
+    :param save_path: Path to save the figure
     :return: The scatter plot
     """
     plt.figure(figsize=(8, 8))
     plt.scatter(y, y_pred)
     plt.xlabel("True values")
     plt.ylabel("Predicted values")
-    plt.show()
+
+    if save_path != None:
+        plt.savefig(save_path)
 
 
-def plot_trend(y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None):
+def plot_trend(
+    y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None, save_path: str = None
+):
 
     """
     Plot the trend of predicted and true dependant variable
@@ -72,6 +77,7 @@ def plot_trend(y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None):
     :param y: True values for dependant variable
     :param y_pred: Predicted values for dependant variable
     :param y_pred: Determine the specific time-extend to focus on
+    :param save_path: Path to save the figure
     :return: The trend plot
     """
     plt.figure(figsize=(16, 8))
@@ -82,7 +88,9 @@ def plot_trend(y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None):
 
     if xlim != None:
         plt.xlim(xlim)
-    plt.show()
+
+    if save_path != None:
+        plt.savefig(save_path)
 
 
 def temperal_cross_validation(
