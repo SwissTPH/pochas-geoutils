@@ -35,6 +35,7 @@ setup(
         "netcdf4",
         "requests",
         "sklearn",
+        "xlsxwriter",
     ],
     entry_points={
         "console_scripts": [

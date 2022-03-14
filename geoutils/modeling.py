@@ -20,6 +20,7 @@ from sklearn.model_selection import (
     GroupKFold,
 )
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.inspection import plot_partial_dependence
 
 import geopandas as gpd
 
@@ -67,16 +68,16 @@ def scatter_plot(y: npt.ArrayLike, y_pred: npt.ArrayLike, save_path: str = None)
         plt.savefig(save_path)
 
 
-def plot_trend(
+def plot_trend_spatialy(
     y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None, save_path: str = None
 ):
 
     """
-    Plot the trend of predicted and true dependant variable
+    Plot the trend of predicted and true dependant variable. This function consider all the stations to plot
 
     :param y: True values for dependant variable
     :param y_pred: Predicted values for dependant variable
-    :param y_pred: Determine the specific time-extend to focus on
+    :param y_pred: Determine the specific interval to focus on
     :param save_path: Path to save the figure
     :return: The trend plot
     """
@@ -84,7 +85,8 @@ def plot_trend(
     plt.plot(y, color="k", alpha=0.3, lw=1, label="True values")
     plt.plot(y_pred, color="b", lw=1, label="Predicted values")
     plt.legend()
-    plt.xlabel("Time")
+    plt.xlabel("Time-Spatial")
+    plt.ylabel("Grains/$m^3$")
 
     if xlim != None:
         plt.xlim(xlim)
@@ -94,7 +96,12 @@ def plot_trend(
 
 
 def temperal_cross_validation(
-    model, X: pd.DataFrame, y: pd.Series, num_split: int = 5, csv_path: str = None
+    model,
+    X: pd.DataFrame,
+    y: pd.Series,
+    num_split: int = 5,
+    xls_path: str = None,
+    shuffle: bool = True,
 ):
 
     """
@@ -104,11 +111,12 @@ def temperal_cross_validation(
     :param X: predictors
     :param y: dependant variable
     :param num_split: Number of folds
-    :param csv_path: The path the CSV should be saved
+    :param shuffle: Whether to shuffle the data before splitting into batches. Note that the samples within each split will not be shuffled.
+    :param xls_path: The path the Excel file should be saved
     :return: calculated the error metrics for each fold with average of them
     """
     num_split = num_split
-    cv = KFold(num_split)
+    cv = KFold(num_split, shuffle=shuffle)
     scores = cross_validate(
         model,
         X,
@@ -139,8 +147,8 @@ def temperal_cross_validation(
     df_err.columns = [f"Fold 0{i}" for i in np.arange(1, num_split + 1)]
     df_err.loc[:, "Average_Error"] = df_err.mean(axis=1)
 
-    if csv_path != None:
-        df_err.to_csv(csv_path)
+    if xls_path != None:
+        df_err.to_excel(xls_path, engine="xlsxwriter")
 
     return df_err
 
@@ -169,7 +177,7 @@ def spatial_cross_validation(
     y: pd.Series,
     stations: pd.Series,
     num_split=5,
-    csv_path=None,
+    xls_path=None,
 ):
     """
     Implement spatial cross-validation and calculate the error metrics
@@ -179,7 +187,7 @@ def spatial_cross_validation(
     :param y: dependant variable
      :param stations: The column which includes the name of the stations
     :param num_split: Number of folds
-    :param csv_path: The path the CSV should be saved
+    :param xls_path: The path the Excel file should be saved
     :return: calculated the error metrics for each fold with average of them
   
     """
@@ -217,8 +225,8 @@ def spatial_cross_validation(
     df_err.columns = [f"Fold 0{i}" for i in np.arange(1, num_split + 1)]
     df_err.loc[:, "Average_Error"] = df_err.mean(axis=1)
 
-    if csv_path != None:
-        df_err.to_csv(csv_path)
+    if xls_path != None:
+        df_err.to_excel(xls_path, engine="xlsxwriter")
 
     return df_err
 
@@ -274,3 +282,40 @@ def plot_spatial_cross_validatoion(
         fig.suptitle(f"Spatial cross-validation with {n_splits} folds")
     plt.show()
 
+
+def plot_feature_importances(model, feature_cols: list, save_path: str = None):
+    """"
+    Function fetch and plot the importances of the features used during the training process
+
+    :param model: Trained model using sklearn module
+    :param feature_cols: Features used during the training process
+    :return: The bar plot
+    """
+    feature_imp = pd.Series(model.feature_importances_, index=feature_cols).sort_values(
+        ascending=False
+    )
+    ax = feature_imp.plot(kind="bar", figsize=(30, 15), fontsize=12)
+    ax.set(ylabel="Relative Importance")
+    ax.set(xlabel="Feature")
+    plt.tight_layout()
+    if save_path != None:
+        plt.savefig(save_path)
+
+
+def PDP_plot(model, X: pd.DataFrame, feat: list, save_path: str = None):
+    """
+    Funtion to plot Partial Dependence (PDP)
+
+    :param model: Trained model using sklearn module
+    :param X: Features used for training
+    :param feat: Features PDP should calculated for
+    :return: PDP
+    """
+    plot_partial_dependence(model, X, feat, n_jobs=-1, grid_resolution=20)
+    fig = plt.gcf()
+    fig.set_size_inches(16, 16)
+    fig.suptitle("Partial dependance of pollen count on first 12 important features")
+    fig.subplots_adjust(wspace=0.2, hspace=0.4)
+    fig.tight_layout()
+    if save_path != None:
+        plt.savefig(save_path)
