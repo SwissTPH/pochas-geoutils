@@ -36,6 +36,7 @@ setup(
         "requests",
         "sklearn",
         "xlsxwriter",
+        "coloredlogs"
     ],
     entry_points={
         "console_scripts": [

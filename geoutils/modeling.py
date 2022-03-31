@@ -21,6 +21,7 @@ from sklearn.model_selection import (
 )
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.inspection import plot_partial_dependence
+from sklearn.preprocessing import FunctionTransformer
 
 import geopandas as gpd
 
@@ -319,3 +320,24 @@ def PDP_plot(model, X: pd.DataFrame, feat: list, save_path: str = None):
     fig.tight_layout()
     if save_path != None:
         plt.savefig(save_path)
+
+
+def cos_transformer(period):
+
+    """
+    cyclical encoding with cosine transformation
+
+    :param period: The numer of the cuclical steps
+    :return: Transformend data
+    """
+    return FunctionTransformer(lambda x: np.cos(x / period * 2 * np.pi))
+
+
+def sin_transformer(period):
+    """
+    cyclical encoding with sine transformation
+
+    :param period: The numer of the cuclical steps
+    :return: Transformend data
+    """
+    return FunctionTransformer(lambda x: np.sin(x / period * 2 * np.pi))
