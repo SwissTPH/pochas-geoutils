@@ -78,7 +78,7 @@ def plot_trend_spatialy(
 
     :param y: True values for dependant variable
     :param y_pred: Predicted values for dependant variable
-    :param y_pred: Determine the specific interval to focus on
+    :param xlim: Determine the specific interval to focus on
     :param save_path: Path to save the figure
     :return: The trend plot
     """
