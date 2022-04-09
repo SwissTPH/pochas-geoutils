@@ -4,32 +4,30 @@
 # Date:28.02.2022
 
 
+import os
+import sys
+
 # Packages
 from typing import List
-import pandas as pd
-import numpy as np
-import numpy.typing as npt
-
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import (
-    train_test_split,
-    cross_validate,
-    GridSearchCV,
-    KFold,
-    TimeSeriesSplit,
-    GroupKFold,
-)
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.inspection import plot_partial_dependence
-from sklearn.preprocessing import FunctionTransformer
 
 import geopandas as gpd
-
 import matplotlib.pyplot as plt
+import numpy as np
+import numpy.typing as npt
+import pandas as pd
 import seaborn as sns
-
-from typing import List
-import os, sys
+from sklearn.inspection import plot_partial_dependence
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import (
+    GridSearchCV,
+    GroupKFold,
+    KFold,
+    TimeSeriesSplit,
+    cross_validate,
+    train_test_split,
+)
+from sklearn.preprocessing import FunctionTransformer
 
 
 def cal_error_metrics(y: npt.ArrayLike, y_pred: npt.ArrayLike):
@@ -70,7 +68,7 @@ def scatter_plot(y: npt.ArrayLike, y_pred: npt.ArrayLike, save_path: str = None)
 
 
 def plot_trend_spatialy(
-    y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None, save_path: str = None
+    y: npt.ArrayLike, y_pred: npt.ArrayLike, xlim: tuple = None, save_path: str = None  # type: ignore
 ):
 
     """
@@ -101,7 +99,7 @@ def temperal_cross_validation(
     X: pd.DataFrame,
     y: pd.Series,
     num_split: int = 5,
-    xls_path: str = None,
+    xls_path: str = None,  # type: ignore
     shuffle: bool = True,
 ):
 
@@ -116,7 +114,6 @@ def temperal_cross_validation(
     :param xls_path: The path the Excel file should be saved
     :return: calculated the error metrics for each fold with average of them
     """
-    num_split = num_split
     cv = KFold(num_split, shuffle=shuffle)
     scores = cross_validate(
         model,
@@ -135,7 +132,7 @@ def temperal_cross_validation(
 
     df_err = pd.DataFrame(scores).T[2:]
     df_err[:6] = df_err[:6] * -1
-    df_err.index = index = [
+    df_err.index = [  # type: ignore
         "test_root_mean_squared_error",
         "train_root_mean_squared_error",
         "test_mean_squared_error",
@@ -148,7 +145,7 @@ def temperal_cross_validation(
     df_err.columns = [f"Fold 0{i}" for i in np.arange(1, num_split + 1)]
     df_err.loc[:, "Average_Error"] = df_err.mean(axis=1)
 
-    if xls_path != None:
+    if xls_path is None:
         df_err.to_excel(xls_path, engine="xlsxwriter")
 
     return df_err
@@ -212,7 +209,7 @@ def spatial_cross_validation(
 
     df_err = pd.DataFrame(scores).T[2:]
     df_err[:6] = df_err[:6] * -1
-    df_err.index = index = [
+    df_err.index = [  # type: ignore
         "test_root_mean_squared_error",
         "train_root_mean_squared_error",
         "test_mean_squared_error",
@@ -269,22 +266,22 @@ def plot_spatial_cross_validatoion(
         x_tt = data.x.iloc[tt].unique()
         y_tt = data.y.iloc[tt].unique()
 
-        tr_coord = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x_tr, y_tr))
-        tt_coord = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x_tt, y_tt))
+        tr_coord = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x_tr, y_tr))  # type: ignore
+        tt_coord = gpd.GeoDataFrame(geometry=gpd.points_from_xy(x_tt, y_tt))  # type: ignore
 
-        tr_coord.plot(ax=ax[i - 1], color="Blue", markersize=20, label="Train")
+        tr_coord.plot(ax=ax[i - 1], color="Blue", markersize=20, label="Train")  # type: ignore
         tt_coord.plot(ax=ax[i - 1], color="Red", markersize=20, label="Test")
-        if map != None:
+        if map is not None:
             ch.plot(
                 ax=ax[i - 1], alpha=1, facecolor="none", edgecolor="black", linewidth=1
             )
         ax[i - 1].legend()
-    if title == True:
+    if title is True:
         fig.suptitle(f"Spatial cross-validation with {n_splits} folds")
     plt.show()
 
 
-def plot_feature_importances(model, feature_cols: list, save_path: str = None):
+def plot_feature_importances(model, feature_cols: list, save_path: str = None):  # type: ignore
     """"
     Function fetch and plot the importances of the features used during the training process
 
@@ -296,8 +293,8 @@ def plot_feature_importances(model, feature_cols: list, save_path: str = None):
         ascending=False
     )
     ax = feature_imp.plot(kind="bar", figsize=(30, 15), fontsize=12)
-    ax.set(ylabel="Relative Importance")
-    ax.set(xlabel="Feature")
+    ax.set(ylabel="Relative Importance")  # type: ignore
+    ax.set(xlabel="Feature")  # type: ignore
     plt.tight_layout()
     if save_path != None:
         plt.savefig(save_path)
@@ -322,7 +319,8 @@ def PDP_plot(model, X: pd.DataFrame, feat: list, save_path: str = None):
         plt.savefig(save_path)
 
 
-def cos_transformer(period):
+# Feature Engneering
+def cos_transformer(period: int):
 
     """
     cyclical encoding with cosine transformation
@@ -333,7 +331,7 @@ def cos_transformer(period):
     return FunctionTransformer(lambda x: np.cos(x / period * 2 * np.pi))
 
 
-def sin_transformer(period):
+def sin_transformer(period: int):
     """
     cyclical encoding with sine transformation
 
@@ -341,3 +339,4 @@ def sin_transformer(period):
     :return: Transformend data
     """
     return FunctionTransformer(lambda x: np.sin(x / period * 2 * np.pi))
+
