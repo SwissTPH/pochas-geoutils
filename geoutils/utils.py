@@ -1,10 +1,13 @@
-import json, os
-from pyproj import Proj, CRS
 import datetime as dt
-import xarray as xr
-import rioxarray
+import json
+import os
+
 import numpy as np
 import numpy.ma as ma
+import rioxarray
+import xarray as xr
+from pyproj import CRS, Proj  # type: ignore
+
 
 # ModisAPI.py utils:
 def geometry_from_geojson(filepath: str):
@@ -42,8 +45,8 @@ def geometry_from_geojson(filepath: str):
 
 
 def chunk(l: int, n: int):
-    for i in range(0, len(l), n):
-        yield l[i : i + n]
+    for i in range(0, len(l), n):  # type: ignore
+        yield l[i : i + n]  # type: ignore
 
 
 """assemble request URL string"""
@@ -109,7 +112,7 @@ def convert_to_NetCDF(subsets, coords, ouput_crs, ouput_cellsize):
     xrDataArray = xr.DataArray(
         name=meta["band"],
         data=np.flipud(np.dstack(data["arrays"])),
-        coords=[np.array(ycoordinates), np.array(xcoordinates), dtdates],
+        coords=[np.array(ycoordinates), np.array(xcoordinates), dtdates],  # type: ignore
         dims=["y", "x", "time"],
         attrs=dict(units=meta["units"]),
     )
@@ -170,7 +173,7 @@ def extract_point_buffer_mask(b, rc, s, nd):
     return extracted_values
 
 
-def list_files_with_absolute_paths(dirpath: str, endswith: str = None):
+def list_files_with_absolute_paths(dirpath: str, endswith: str = None):  # type: ignore
     if endswith is None:
         files = []
         for dirname, dirnames, filenames in os.walk(dirpath):
@@ -186,7 +189,7 @@ def list_files_with_absolute_paths(dirpath: str, endswith: str = None):
     return files
 
 
-def list_files(dirpath: str, endswith: str = None):
+def list_files(dirpath: str, endswith: str = None):  # type: ignore
     if endswith is not None:
         files = []
         for dirname, dirnames, filenames in os.walk(dirpath):

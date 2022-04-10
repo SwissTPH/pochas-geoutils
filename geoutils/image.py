@@ -4,15 +4,17 @@
 # Date:27.01.2022
 
 
-import xarray as xr
-import rioxarray
-from rioxarray.merge import merge_arrays
-import rasterio as rs
-import pandas as pd
-from pathlib import Path, PosixPath
 import os
-from . import utils as ut
+from pathlib import Path, PosixPath
 from typing import Set
+
+import pandas as pd
+import rasterio as rs
+import rioxarray
+import xarray as xr
+from rioxarray.merge import merge_arrays
+
+from . import utils as ut
 
 
 def mosaic_from_tiles(
@@ -20,7 +22,7 @@ def mosaic_from_tiles(
     out_put_path: str,
     dtype: str = "float32",
     nodata: int = -9999,
-    mask: int = None,
+    mask: int = None,  # type: ignore
     format: str = "GeoTiff",
 ):
     """
@@ -36,17 +38,17 @@ def mosaic_from_tiles(
     in_path = Path(in_put_path)
     out_path = Path(out_put_path)
 
-    img_list = ut.list_files_with_absolute_paths(in_path, endswith=".tif")
+    img_list = ut.list_files_with_absolute_paths(in_path, endswith=".tif")  # type: ignore
     if format is "GeoTiff":
-        img_list = ut.list_files_with_absolute_paths(in_path, endswith=".tif")
+        img_list = ut.list_files_with_absolute_paths(in_path, endswith=".tif")  # type: ignore
         img_series = [xr.open_rasterio(img) for img in img_list]
     else:
-        img_list = ut.list_files_with_absolute_paths(in_path, endswith=".nc")
+        img_list = ut.list_files_with_absolute_paths(in_path, endswith=".nc")  # type: ignore
         img_series = [xr.open_dataarray(img) for img in img_list]
 
     merged = merge_arrays(img_series)
     if mask is not None:
-        merged = merged.where(merged != mask, nodata)
+        merged = merged.where(merged != mask, nodata)  # type: ignore
 
     merged.rio.set_nodata(input_nodata=nodata, inplace=True)
     if format is "GeoTiff":
@@ -69,10 +71,10 @@ def exract_boundry(original_img: str, source_img: str, out_path: str, crs: str):
     original_ = rs.open(original_img)
     source_ = rs.open(source_img)
     minx, miny, maxx, maxy = source_.bounds
-    window = from_bounds(minx, miny, maxx, maxy, transform=original_.transform)
+    window = from_bounds(minx, miny, maxx, maxy, transform=original_.transform) # type: ignore
     width = source_.width
     height = source_.height
-    transform = rs.transform.from_bounds(minx, miny, maxx, maxy, width, height)
+    transform = rs.transform.from_bounds(minx, miny, maxx, maxy, width, height) # type: ignore
     result = original_.read(window=window, out_shape=(height, width), resampling=0)
     out_path = out_path
     with rs.open(

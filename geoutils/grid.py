@@ -3,10 +3,10 @@
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
 # Date: 14.03.2021
 
-import numpy as np
 import geopandas as gpd
-from shapely.geometry import Polygon, LineString, Point, MultiPoint, box
+import numpy as np
 import pandas as pd
+from shapely.geometry import LineString, MultiPoint, Point, Polygon, box
 
 gpd.GeoDataFrame
 
@@ -65,7 +65,7 @@ class grid:
         df1 = pd.DataFrame({"X": xv.flatten(), "Y": yv.flatten()})
         df1["coords"] = list(zip(df1["X"], df1["Y"]))
         df1["coords"] = df1["coords"].apply(Point)
-        gdf1 = gpd.GeoDataFrame(df1, geometry="coords")
+        gdf1 = gpd.GeoDataFrame(df1, geometry="coords")  # type: ignore
 
         if self.crs != 4326:
             gdf1.set_crs(crs=self.crs, inplace=True)
@@ -95,7 +95,7 @@ class grid:
             cell_cds,
         )
 
-        gdf = gpd.GeoDataFrame(cs, columns=["geom"], crs=self.crs, geometry="geom")
+        gdf = gpd.GeoDataFrame(cs, columns=["geom"], crs=self.crs, geometry="geom")  # type: ignore
 
         return gdf
 
@@ -123,10 +123,10 @@ class grid:
 # Func 03
 def generate_BID(
     gdf: gpd.GeoDataFrame,
-    coords: str = None,
-    cell: int = None,
-    x: float = None,
-    y: float = None,
+    coords: str = None,  # type: ignore
+    cell: int = None,  # type: ignore
+    x: float = None,  # type: ignore
+    y: float = None,  # type: ignore
     circularity: bool = False,
 ):
     """

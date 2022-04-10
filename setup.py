@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.0.2",
+    version="1.0.0",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
@@ -36,7 +36,7 @@ setup(
         "requests",
         "sklearn",
         "xlsxwriter",
-        "coloredlogs"
+        "coloredlogs",
     ],
     entry_points={
         "console_scripts": [

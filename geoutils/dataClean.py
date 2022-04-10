@@ -1,6 +1,7 @@
 # functions to manage the data prepration
+from typing import List, Set
+
 import pandas as pd
-from typing import Set, List
 
 
 def rename_column_name(
@@ -16,7 +17,7 @@ def rename_column_name(
     return df
 
 
-def remove_whitespace(df: pd.DataFrame, skip_rows: str = None):
+def remove_whitespace(df: pd.DataFrame, skip_rows: str = None):  # type: ignore
     """
     :param df: Datafrrame whcih should be checked for white space
     :param skip_rows: list of the columns which should be ignored
@@ -40,10 +41,10 @@ def transla(name_row: List[str], language_1: List[str], language_2: List[str]):
     :param language_2: List of the second language
     :return: translated name for each row
 
-    Usage:\
+    Usage:
     gdf['type_eng'] = gdf['type'].apply(transla,args=(lst_1,lst_2))
     """
     b = [(a[0], a[1]) for a in zip(language_1, language_2)]
     for tup in b:
-        if tup[0].lower() == name_row.lower():
+        if tup[0].lower() == name_row.lower():  # type: ignore
             return tup[1].lower()

@@ -1,6 +1,13 @@
-import requests, json, os, time, argparse, sys
+import argparse
+import json
+import os
+import sys
+import time
 from pathlib import Path
+
 import geopandas as gpd
+import requests
+
 from . import utils as ut
 
 
@@ -55,7 +62,7 @@ def main():
     ymin = region_geometry["coordinates"][0][0][1]
     ymax = region_geometry["coordinates"][0][2][1]
     bbox = (xmin, ymin, xmax, ymax)
-    INPUT_DATA = Path(LandsatGLAD.__file__).parent / "data"
+    INPUT_DATA = Path(LandsatGLAD.__file__).parent / "data"  # type: ignore
     gdf = gpd.read_file(INPUT_DATA / "glad_landsat_tiles.geojson", bbox=bbox)
 
     tiles = list(gdf["TILE"])

@@ -5,19 +5,22 @@
 # https://github.com/ornldaac/modis-viirs-rest-api-python
 # https://modis.ornl.gov/data/modis_webservice.html
 
-# For requests
-import requests, json, os, time
-import numpy as np
-from . import grid as gr
-from . import utils as ut
-from pyproj import Proj, CRS
-import datetime as dt
-import xarray as xr
-import rioxarray
-
 # Utilities
 import argparse
+import datetime as dt
+import json
+import os
 import sys
+import time
+
+import numpy as np
+import requests
+import rioxarray
+import xarray as xr
+from pyproj import CRS, Proj  # type: ignore
+
+from . import grid as gr
+from . import utils as ut
 
 
 def main():
@@ -192,7 +195,7 @@ def main():
                     )
                 ]
 
-                chunks = list(ut.chunk(modis_dates, number_chunks))
+                chunks = list(ut.chunk(modis_dates, number_chunks))  # type: ignore
                 subsets = []
                 for i, c in enumerate(chunks):
                     print(
@@ -256,7 +259,7 @@ def main():
                 # Iterate over groups of dates, request subsets from the REST API, and append to a list of responses:
                 for d, coords in enumerate(point_list_WGS):
                     print(f"coordinate: {coords}")
-                    chunks = list(ut.chunk(modis_dates[d], number_chunks))
+                    chunks = list(ut.chunk(modis_dates[d], number_chunks))  # type: ignore
                     subsets = []
                     for i, c in enumerate(chunks):
                         print(
