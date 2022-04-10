@@ -14,8 +14,6 @@ A description of pochas-geoutils's functionality can be found [here]().
 - _pip_:
   `pip install pochas-geoutils`
 
-Detailed instructions can be found in the documentation [here]().
-
 # Tutorial
 
 A jupyter notebook and test data are available [here](https://github.com/behzad89/pochas-geoutils/tree/main/Tutorials).
