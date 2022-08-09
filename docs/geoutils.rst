@@ -3,7 +3,6 @@ API Documentation
 
 geoutils.LandsatGLAD module
 ---------------------------
-
 .. automodule:: geoutils.LandsatGLAD
    :members:
    :undoc-members:
@@ -11,7 +10,6 @@ geoutils.LandsatGLAD module
 
 geoutils.cube module
 --------------------
-
 .. automodule:: geoutils.cube
    :members:
    :undoc-members:
@@ -19,7 +17,6 @@ geoutils.cube module
 
 geoutils.dataClean module
 -------------------------
-
 .. automodule:: geoutils.dataClean
    :members:
    :undoc-members:
@@ -27,7 +24,6 @@ geoutils.dataClean module
 
 geoutils.dataExtraction module
 ------------------------------
-
 .. automodule:: geoutils.dataExtraction
    :members:
    :undoc-members:
@@ -35,7 +31,6 @@ geoutils.dataExtraction module
 
 geoutils.grid module
 --------------------
-
 .. automodule:: geoutils.grid
    :members:
    :undoc-members:
@@ -43,7 +38,6 @@ geoutils.grid module
 
 geoutils.image module
 ---------------------
-
 .. automodule:: geoutils.image
    :members:
    :undoc-members:
@@ -51,7 +45,6 @@ geoutils.image module
 
 geoutils.modisAPI module
 ------------------------
-
 .. automodule:: geoutils.modisAPI
    :members:
    :undoc-members:
@@ -59,9 +52,7 @@ geoutils.modisAPI module
 
 geoutils.utils module
 ---------------------
-
 .. automodule:: geoutils.utils
    :members:
    :undoc-members:
    :show-inheritance:
-
