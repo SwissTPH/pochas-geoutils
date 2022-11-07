@@ -89,3 +89,4 @@ def exract_boundry(original_img: str, source_img: str, out_path: str, crs: str):
         crs=crs,
     ) as output_file:
         output_file.write(result)
+

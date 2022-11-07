@@ -6,7 +6,6 @@
 
 import os
 import sys
-
 # Packages
 from typing import List
 
@@ -19,14 +18,9 @@ import seaborn as sns
 from sklearn.inspection import plot_partial_dependence
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import (
-    GridSearchCV,
-    GroupKFold,
-    KFold,
-    TimeSeriesSplit,
-    cross_validate,
-    train_test_split,
-)
+from sklearn.model_selection import (GridSearchCV, GroupKFold, KFold,
+                                     TimeSeriesSplit, cross_validate,
+                                     train_test_split)
 from sklearn.preprocessing import FunctionTransformer
 
 
@@ -145,7 +139,7 @@ def temperal_cross_validation(
     df_err.columns = [f"Fold 0{i}" for i in np.arange(1, num_split + 1)]
     df_err.loc[:, "Average_Error"] = df_err.mean(axis=1)
 
-    if xls_path is None:
+    if xls_path != None:
         df_err.to_excel(xls_path, engine="xlsxwriter")
 
     return df_err
