@@ -23,7 +23,7 @@ copyright = "2022, Behzad Valipour Sh"
 author = "Behzad Valipour Sh."
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.1"
+release = "0.7.0"
 
 
 # -- General configuration ---------------------------------------------------
