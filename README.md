@@ -18,7 +18,7 @@ A description of pochas-geoutils's functionality can be found [here](https://poc
 
 # Tutorial
 
-A jupyter notebook and test data are available [here](https://github.com/behzad89/pochas-geoutils/tree/main/Tutorials).
+A jupyter notebook and test data are available [here](https://github.com/behzad89/pochas-geoutils/tree/Tutorials/Tutorials).
 
 # Dockerfile
 
