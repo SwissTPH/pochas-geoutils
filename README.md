@@ -16,10 +16,6 @@ A description of pochas-geoutils's functionality can be found [here](https://poc
 - _pip_:
   `pip install pochas-geoutils`
 
-# Tutorial
-
-A jupyter notebook and test data are available [here](https://github.com/behzad89/pochas-geoutils/tree/main/Tutorials).
-
 # Dockerfile
 
 The Dockerimage to setup the **python container** is provided on the **ubuntu:20.04** environment [here](https://github.com/behzad89/pochas-geoutils/tree/main/src).
