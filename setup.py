@@ -9,7 +9,7 @@ def readme():
 
 setup(
     name="pochas-geoutils",
-    version="0.0.1",
+    version="0.0.3",
     description="A Python package includes geo-utils for PoCHAS project",
     long_description=readme(),
     long_description_content_type="text/markdown",
