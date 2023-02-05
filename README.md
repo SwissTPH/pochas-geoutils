@@ -1,6 +1,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pochas-geoutils/badge/?version=latest)](https://pochas-geoutils.readthedocs.io/en/latest/?badge=latest)
 [![image](https://img.shields.io/pypi/v/pochas-geoutils)](https://pypi.org/project/pochas-geoutils/)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![](https://github.com/behzad89/pochas-geoutils/workflows/deploy_pypi/badge.svg)
 # pochas-geoutils Python Package
 
 A Python package is offering tools for spatial data handling to feed to machine learning Algorithms. All functionalities was applied or user-friendly geo data processing in [**POCHAS project**](https://www.swisstph.ch/fr/projects/project-detail/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms)
