@@ -34,7 +34,7 @@ setup(
         "rasterio",
         "netcdf4",
         "requests",
-        "sklearn",
+        "scikit-learn",
         "xlsxwriter",
         "coloredlogs",
     ],
