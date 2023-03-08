@@ -2,18 +2,20 @@
 # Description: The tools to generate a cube from rasters, plus it includes some functions to work with images
 # Author: Behzad Valipour Sh. <behzad.valipour@swisstph.ch>
 # Date: 07.04.2021
-# Update: 23.04.2021; 04.05.2021
+# Update: 23.04.2021; 04.05.2021 
 
 
-import xarray as xr
-import rioxarray
-from rioxarray.merge import merge_arrays
-import rasterio as rs
-import pandas as pd
-from pathlib import Path, PosixPath
 import os
+from pathlib import Path, PosixPath
+from typing import List, Optional, Set
+
+import pandas as pd
+import rasterio as rs
+import rioxarray
+import xarray as xr
+from rioxarray.merge import merge_arrays
+
 from . import utils as ut
-from typing import Set, List, Optional
 
 
 def get_imgs(
