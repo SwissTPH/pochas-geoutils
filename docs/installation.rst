@@ -12,4 +12,4 @@ Another way is to install directly via GitHUB repository
 
     pip install git+https://github.com/SwissTPH/pochas-geoutils.git
 
-The Dockerimage to setup the **python container** is provided on the **ubuntu:20.04** environment `here <https://github.com/behzad89/pochas-geoutils/tree/main/src>`__.
+The Dockerfile 🐳 to setup the python container 🐍 is provided on the **ubuntu:20.04** environment `here <https://github.com/behzad89/pochas-geoutils/tree/main/src>`__.
