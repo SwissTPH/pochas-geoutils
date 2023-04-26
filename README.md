@@ -2,6 +2,7 @@
 [![image](https://img.shields.io/pypi/v/pochas-geoutils)](https://pypi.org/project/pochas-geoutils/)
 [![image](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![](https://github.com/behzad89/pochas-geoutils/workflows/deploy_pypi/badge.svg)
+[![badge text](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bvsh/)
 #  pochas-geoutils Python Package
 
 📦 This Python package provides spatial data handling tools 🛠️ to facilitate the input of data to machine learning algorithms🤖. All functionalities have been developed to enable user-friendly 👨‍💻 geo-data processing in [**POCHAS project**](https://www.swisstph.ch/fr/projects/project-detail/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms)
