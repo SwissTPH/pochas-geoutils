@@ -5,7 +5,7 @@
 [![badge text](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/bvsh/)
 #  pochas-geoutils Python Package
 
-📦 This Python package provides spatial data handling tools 🛠️ to facilitate the input of data to machine learning algorithms🤖. All functionalities have been developed to enable user-friendly 👨‍💻 geo-data processing in [**POCHAS project**](https://www.swisstph.ch/fr/projects/project-detail/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms)
+📦 This Python package provides spatial data handling tools 🛠️ to facilitate the input of data to machine learning algorithms🤖. All functionalities have been developed to enable user-friendly 👨‍💻 geo-data processing in [**POCHAS project**](https://www.swisstph.ch/en/projects/project-detail/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms)
 
 🌍 This package is especially useful for working with geospatial data in various applications such as environmental monitoring, transportation, and location-based services.
 
