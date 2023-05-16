@@ -6,7 +6,7 @@
 Welcome to pochas-geoutils's documentation!
 ===========================================
 
-📦 This Python package provides spatial data handling tools 🛠️ to facilitate the input of data to machine learning algorithms🤖. All functionalities have been developed to enable user-friendly 👨‍💻 geo-data processing in `POCHAS project <https://www.swisstph.ch/en/projects/project-detail/project-action/detail/project-controller/Projects/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms/>`__
+📦 This Python package provides spatial data handling tools 🛠️ to facilitate the input of data to machine learning algorithms🤖. All functionalities have been developed to enable user-friendly 👨‍💻 geo-data processing in `POCHAS project <https://www.swisstph.ch/en/projects/project-detail/project/effects-of-airborne-pollen-on-cardiorespiratory-health-and-allergic-symptoms/>`__
 
 .. toctree::
    :maxdepth: 2
